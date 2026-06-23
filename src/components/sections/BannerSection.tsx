@@ -1,6 +1,5 @@
 ﻿"use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function BannerSection() {
@@ -11,14 +10,12 @@ export default function BannerSection() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="relative w-full aspect-[4/1]"
+        className="w-full"
       >
-        <Image
+        <img
           src="/images/gallery-2.png"
           alt="MYSTIC YOGA"
-          fill
-          className="object-contain mx-auto"
-          priority
+          className="w-full h-auto block"
         />
       </motion.div>
     </section>

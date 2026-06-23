@@ -35,16 +35,7 @@ const galleryItems: GalleryItem[] = [ { id: "1", title: "Personal Yoga Training"
   { id: "12", title: "Gallery Collection 4", category: "Retreats", image: "/images/gallery-4.jpg" },
   { id: "13", title: "Wellness Gallery 1", category: "Yoga", image: "/images/gallery1.png" },
   { id: "14", title: "Wellness Gallery 2", category: "Meditation", image: "/images/gallery2.png" },
-  { id: "15", title: "Hero Collection", category: "Training", image: "/images/Screenshot 2026-06-22 222129.png" },
-  { id: "16", title: "Hero Collection", category: "Yoga", image: "/images/Screenshot 2026-06-22 222144.png" },
-  { id: "17", title: "Hero Collection", category: "Yoga", image: "/images/Screenshot 2026-06-22 222155.png" },
-  { id: "18", title: "Hero Collection", category: "Yoga", image: "/images/Screenshot 2026-06-22 222205.png" },
-  { id: "20", title: "Wellness Gallery 1", category: "Yoga", image: "/images/Screenshot 2026-06-22 222234.png" },
-  { id: "21", title: "Wellness Gallery 1", category: "Yoga", image: "/images/Screenshot 2026-06-22 222242.png" },
-  { id: "22", title: "Wellness Gallery 2", category: "Meditation", image: "/images/Screenshot 2026-06-22 222251.png" },
-  { id: "23", title: "Wellness Gallery 2", category: "Meditation", image: "/images/Screenshot 2026-06-22 222305.png" },
-  { id: "24", title: "Wellness Gallery 2", category: "Yoga", image: "/images/Screenshot 2026-06-22 222315.png" },
-  { id: "25", title: "Wellness Gallery 2", category: "Yoga", image: "/images/Screenshot 2026-06-22 222328.png" },
+
   { id: "26", title: "Yoga Practice", category: "Yoga", image: "/images/Screenshot 2026-06-23 114528.png" },
   { id: "27", title: "Meditation Session", category: "Meditation", image: "/images/Screenshot 2026-06-23 114536.png" },
   { id: "28", title: "Wellness Journey", category: "Yoga", image: "/images/Screenshot 2026-06-23 114547.png" },
@@ -55,6 +46,9 @@ const galleryItems: GalleryItem[] = [ { id: "1", title: "Personal Yoga Training"
   { id: "33", title: "Training Session", category: "Training", image: "/images/Screenshot 2026-06-23 114628.png" },
   { id: "34", title: "Yoga Studio", category: "Yoga", image: "/images/Screenshot 2026-06-23 114639.png" },
   { id: "35", title: "Wellness Event", category: "Events", image: "/images/Screenshot 2026-06-23 114722.png" },
+  { id: "36", title: "Wellness Gallery", category: "Yoga", image: "/images/Screenshot 2026-06-23 123504.png" },
+  { id: "37", title: "Meditation Space", category: "Meditation", image: "/images/Screenshot 2026-06-23 123515.png" },
+  { id: "38", title: "Yoga Practice", category: "Yoga", image: "/images/Screenshot 2026-06-23 123521.png" },
 ];
 
 const categories = ["All", ...Array.from(new Set(galleryItems.map((i) => i.category)))];
