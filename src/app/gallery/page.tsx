@@ -21,20 +21,11 @@ interface GalleryItem {
   image: string;
 }
 
-const galleryItems: GalleryItem[] = [ { id: "1", title: "Personal Yoga Training", category: "Yoga", image: "/images/yoga-personal.jpg" },
-  { id: "2", title: "Meditation & Mindfulness", category: "Meditation", image: "/images/meditation.jpg" },
-  { id: "3", title: "Corporate Wellness Program", category: "Events", image: "/images/corporate.jpg" },
-  { id: "4", title: "Women's Wellness Retreat", category: "Retreats", image: "/images/women-wellness.jpg" },
-  { id: "5", title: "International Online Classes", category: "Training", image: "/images/online-classes.jpg" },
-  { id: "6", title: "Luxury Wellness Retreat", category: "Retreats", image: "/images/retreats.jpg" },
+const galleryItems: GalleryItem[] = [
   { id: "7", title: "About Sunita Singh", category: "Events", image: "/images/about-sunita.jpg" },
-  { id: "8", title: "Gallery Collection 1", category: "Yoga", image: "/images/gallery-1.jpg" },
   { id: "9", title: "Gallery Collection 2", category: "Meditation", image: "/images/gallery-2.png" },
-  { id: "10", title: "Gallery Collection 3", category: "Events", image: "/images/gallery-3.jpg" },
   { id: "11", title: "Hero Collection", category: "Yoga", image: "/images/hero-main.jpg" },
   { id: "12", title: "Gallery Collection 4", category: "Retreats", image: "/images/gallery-4.jpg" },
-  { id: "13", title: "Wellness Gallery 1", category: "Yoga", image: "/images/gallery1.png" },
-  { id: "14", title: "Wellness Gallery 2", category: "Meditation", image: "/images/gallery2.png" },
 
   { id: "26", title: "Yoga Practice", category: "Yoga", image: "/images/Screenshot 2026-06-23 143647.png" },
   { id: "27", title: "Meditation Session", category: "Meditation", image: "/images/Screenshot 2026-06-23 143659.png" },
@@ -48,6 +39,15 @@ const galleryItems: GalleryItem[] = [ { id: "1", title: "Personal Yoga Training"
   { id: "35", title: "Wellness Event", category: "Events", image: "/images/Screenshot 2026-06-23 143804.png" },
   { id: "36", title: "Wellness Gallery", category: "Yoga", image: "/images/Screenshot 2026-06-23 143821.png" },
   { id: "37", title: "Meditation Space", category: "Meditation", image: "/images/Screenshot 2026-06-23 143913.png" },
+  { id: "38", title: "Yoga Session", category: "Yoga", image: "/images/Screenshot 2026-06-23 150901.png" },
+  { id: "39", title: "Wellness Retreat", category: "Retreats", image: "/images/Screenshot 2026-06-23 150909.png" },
+  { id: "40", title: "Meditation Practice", category: "Meditation", image: "/images/Screenshot 2026-06-23 150919.png" },
+  { id: "41", title: "Yoga Training", category: "Training", image: "/images/Screenshot 2026-06-23 150940.png" },
+  { id: "42", title: "Wellness Workshop", category: "Events", image: "/images/Screenshot 2026-06-23 150947.png" },
+  { id: "43", title: "Yoga Class", category: "Yoga", image: "/images/Screenshot 2026-06-23 150955.png" },
+  { id: "44", title: "Meditation Space", category: "Meditation", image: "/images/Screenshot 2026-06-23 151003.png" },
+  { id: "45", title: "Fitness Session", category: "Training", image: "/images/Screenshot 2026-06-23 151013.png" },
+  { id: "46", title: "Wellness Gallery", category: "Yoga", image: "/images/Screenshot 2026-06-23 151024.png" },
 ];
 
 const categories = ["All", ...Array.from(new Set(galleryItems.map((i) => i.category)))];
