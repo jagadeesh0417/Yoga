@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { services, siteConfig } from '@/lib/data';
 import { cn, bookConsultationLink, whatsappLink } from '@/lib/utils';
 import SectionTitle from '@/components/SectionTitle';
-import ResponsiveImage from '@/components/ResponsiveImage';
+
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -43,13 +43,15 @@ function ServiceSection({
         isReversed && 'lg:direction-rtl'
       )}
     >
-      <div className={cn(isReversed && 'lg:order-1')}>
+        <div className={cn(isReversed && 'lg:order-1')}>
         <div className="relative rounded-2xl overflow-hidden group">
-          <ResponsiveImage
-            src={service.image}
-            alt={service.title}
-            containerClassName="transition-transform duration-700 group-hover:scale-105"
-          />
+          <div className="relative w-full h-[400px] bg-white flex items-center justify-center overflow-hidden transition-transform duration-700 group-hover:scale-105">
+            <img
+              src={service.image}
+              alt={service.title}
+              className="w-full h-full object-contain object-center"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />
           <div className="absolute inset-0 flex items-center justify-center z-20">
             <div className="text-center p-8">

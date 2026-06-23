@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { blogPosts } from "@/lib/data";
-import ResponsiveImage from "@/components/ResponsiveImage";
 import { cn } from "@/lib/utils";
 import Newsletter from "@/components/Newsletter";
 
@@ -179,11 +178,13 @@ export default function BlogPage() {
                 >
                   <Link href={`/blog/${post.slug}`} className="block">
                     <div className="relative overflow-hidden">
-                      <ResponsiveImage
-                        src={post.image}
-                        alt={post.title}
-                        containerClassName="transition-transform duration-500 group-hover:scale-105"
-                      />
+                      <div className="relative w-full h-[220px] bg-white flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105">
+                        <img
+                          src={post.image}
+                          alt={post.title}
+                          className="w-full h-full object-contain object-center"
+                        />
+                      </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                       <span
                         className={cn(
