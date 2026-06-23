@@ -52,37 +52,37 @@ export const services = [
     title: 'Personal Yoga Training',
     description: 'Customized one-on-one yoga sessions tailored to your goals, body type, and wellness needs.',
     features: ['Weight Loss Yoga', 'Flexibility Training', 'Strength Building Yoga', 'Therapeutic Yoga', 'Posture Correction', 'Senior Citizen Yoga'],
-    image: '/images/yoga-personal.jpg',
+    image: '/images/Screenshot 2026-06-23 143647.png',
   },
   {
     title: 'Meditation & Mindfulness',
     description: 'Transform your inner world through guided practices that cultivate peace, clarity, and emotional balance.',
     features: ['Guided Meditation', 'Mindfulness Practices', 'Breathwork Sessions', 'Stress Relief Programs', 'Sleep Improvement Techniques'],
-    image: '/images/meditation.jpg',
+    image: '/images/Screenshot 2026-06-23 143659.png',
   },
   {
     title: 'Corporate Wellness Programs',
     description: 'Strategic wellness solutions that boost employee wellbeing, engagement, and organizational success.',
     features: ['Stress Management', 'Better Focus', 'Increased Productivity', 'Improved Team Engagement', 'Workplace Wellbeing'],
-    image: '/images/corporate.jpg',
+    image: '/images/Screenshot 2026-06-23 143708.png',
   },
   {
     title: "Women's Wellness Programs",
     description: 'Holistic wellness designed for women at every life stage, from pregnancy to menopause and beyond.',
     features: ['Hormonal Balance', 'Pregnancy Yoga', 'Postnatal Recovery', 'Menopause Support', 'Emotional Wellness'],
-    image: '/images/women-wellness.jpg',
+    image: '/images/Screenshot 2026-06-23 143717.png',
   },
   {
     title: 'International Online Classes',
     description: 'Live interactive sessions with personalized guidance, connecting a global community of wellness seekers.',
     features: ['Live Interactive Sessions', 'Recorded Classes', 'Personal Guidance', 'Global Community Access'],
-    image: '/images/online-classes.jpg',
+    image: '/images/Screenshot 2026-06-23 143726.png',
   },
   {
     title: 'Luxury Wellness Retreats',
     description: 'Immersive transformational experiences in breathtaking locations around the world.',
     features: ['Yoga', 'Meditation', 'Detox Programs', 'Sound Healing', 'Nature Therapy', 'Wellness Workshops'],
-    image: '/images/retreats.jpg',
+    image: '/images/Screenshot 2026-06-23 143735.png',
   },
 ];
 
@@ -111,11 +111,11 @@ export const testimonials = [
 
 export const blogPosts = [
   { title: 'The Science Behind Yoga and Longevity', slug: 'yoga-and-longevity', excerpt: 'Discover how yoga practices influence cellular aging and promote longevity through scientific mechanisms.', category: 'Wellness', image: '/images/hero-main.jpg' },
-  { title: '10 Powerful Morning Yoga Rituals', slug: 'morning-yoga-rituals', excerpt: 'Start your day with these transformative yoga sequences designed to energize body and mind.', category: 'Yoga', image: '/images/yoga-personal.jpg' },
-  { title: 'Breathwork for Stress Relief', slug: 'breathwork-stress-relief', excerpt: 'Master ancient breathing techniques that instantly calm your nervous system and reduce anxiety.', category: 'Meditation', image: '/images/meditation.jpg' },
-  { title: 'Yoga for Busy Professionals', slug: 'yoga-busy-professionals', excerpt: 'Effective 15-minute yoga routines for professionals with demanding schedules.', category: 'Wellness', image: '/images/online-classes.jpg' },
-  { title: 'Mindfulness in Everyday Life', slug: 'mindfulness-everyday-life', excerpt: 'Simple mindfulness practices that can be seamlessly integrated into your daily routine.', category: 'Mindfulness', image: '/images/retreats.jpg' },
-  { title: 'The Connection Between Yoga and Mental Health', slug: 'yoga-mental-health', excerpt: 'Exploring how regular yoga practice positively impacts mental health and emotional wellbeing.', category: 'Health', image: '/images/women-wellness.jpg' },
+  { title: '10 Powerful Morning Yoga Rituals', slug: 'morning-yoga-rituals', excerpt: 'Start your day with these transformative yoga sequences designed to energize body and mind.', category: 'Yoga', image: '/images/Screenshot 2026-06-23 143744.png' },
+  { title: 'Breathwork for Stress Relief', slug: 'breathwork-stress-relief', excerpt: 'Master ancient breathing techniques that instantly calm your nervous system and reduce anxiety.', category: 'Meditation', image: '/images/Screenshot 2026-06-23 143751.png' },
+  { title: 'Yoga for Busy Professionals', slug: 'yoga-busy-professionals', excerpt: 'Effective 15-minute yoga routines for professionals with demanding schedules.', category: 'Wellness', image: '/images/Screenshot 2026-06-23 143758.png' },
+  { title: 'Mindfulness in Everyday Life', slug: 'mindfulness-everyday-life', excerpt: 'Simple mindfulness practices that can be seamlessly integrated into your daily routine.', category: 'Mindfulness', image: '/images/Screenshot 2026-06-23 143804.png' },
+  { title: 'The Connection Between Yoga and Mental Health', slug: 'yoga-mental-health', excerpt: 'Exploring how regular yoga practice positively impacts mental health and emotional wellbeing.', category: 'Health', image: '/images/Screenshot 2026-06-23 143821.png' },
 ];
 
 export const faqs = [
