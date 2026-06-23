@@ -12,7 +12,7 @@ const certificates = [
   { id: 2, src: "/images/certificate-2.png", title: "Advanced Yoga Training Certification" },
   { id: 3, src: "/images/certificate-3.png", title: "Professional Wellness Coaching" },
   { id: 4, src: "/images/certificate-4.png", title: "Holistic Health Practitioner" },
-  { id: 5, src: "/images/Screenshot 2026-06-23 115210.png", title: "International Yoga Certification" },
+  { id: 5, src: "/images/Screenshot 2026-06-23 132214.png", title: "Advanced Yoga Certification" },
 ];
 
 export default function CertificatesSection() {
