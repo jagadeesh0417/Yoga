@@ -7,6 +7,7 @@ import {
   Check,
   Wallet,
   CreditCard,
+  Smartphone,
   Loader2,
   Copy,
   CheckCheck,
@@ -21,7 +22,7 @@ interface PaymentModalProps {
   planPrice?: string;
 }
 
-type PaymentMethod = 'alipay' | 'fps' | null;
+type PaymentMethod = 'alipay' | 'fps' | 'gpay' | 'phonpe' | null;
 
 type Step = 'select' | 'qr' | 'form' | 'success';
 
@@ -209,6 +210,36 @@ export default function PaymentModal({
                         </div>
                         <Check className="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
                       </button>
+                      <button
+                        onClick={() => handleSelectMethod('gpay')}
+                        className="w-full p-4 rounded-xl border-2 border-beige hover:border-gold/50 hover:bg-gold/5 transition-all flex items-center gap-4 group"
+                      >
+                        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                          <Smartphone className="w-6 h-6 text-blue-500" />
+                        </div>
+                        <div className="text-left flex-1">
+                          <p className="font-semibold text-wine">Google Pay</p>
+                          <p className="text-xs text-wine/50">
+                            Pay with GPay QR code
+                          </p>
+                        </div>
+                        <Check className="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </button>
+                      <button
+                        onClick={() => handleSelectMethod('phonpe')}
+                        className="w-full p-4 rounded-xl border-2 border-beige hover:border-gold/50 hover:bg-gold/5 transition-all flex items-center gap-4 group"
+                      >
+                        <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                          <Smartphone className="w-6 h-6 text-purple-500" />
+                        </div>
+                        <div className="text-left flex-1">
+                          <p className="font-semibold text-wine">PhonePe</p>
+                          <p className="text-xs text-wine/50">
+                            Pay with PhonePe QR code
+                          </p>
+                        </div>
+                        <Check className="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </button>
                     </div>
                   </motion.div>
                 )}
@@ -221,15 +252,20 @@ export default function PaymentModal({
                   >
                     <div className="relative w-48 h-48 mx-auto rounded-xl border-2 border-beige p-2 overflow-hidden bg-white">
                       <Image
-                        src={method === 'alipay' ? '/images/alipay-qr.png' : '/images/fps-qr.png'}
-                        alt={`${method === 'alipay' ? 'Alipay' : 'FPS'} QR Code`}
+                        src={
+                          method === 'alipay' ? '/images/alipay-qr.png' :
+                          method === 'fps' ? '/images/fps-qr.png' :
+                          method === 'gpay' ? '/images/gpay.png' :
+                          '/images/phonpe.png'
+                        }
+                        alt={`${method === 'alipay' ? 'Alipay' : method === 'fps' ? 'FPS' : method === 'gpay' ? 'GPay' : 'PhonePe'} QR Code`}
                         fill
                         className="object-contain p-1"
                       />
                     </div>
                     <p className="text-wine font-semibold text-sm mb-1">
                       Scan to Pay via{' '}
-                      {method === 'alipay' ? 'Alipay' : 'FPS'}
+                      {method === 'alipay' ? 'Alipay' : method === 'fps' ? 'FPS' : method === 'gpay' ? 'Google Pay' : 'PhonePe'}
                     </p>
                     <p className="text-wine/50 text-xs mb-4">
                       {planPrice && `Amount: ${planPrice}`}
