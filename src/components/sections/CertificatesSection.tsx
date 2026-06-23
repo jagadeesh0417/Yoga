@@ -45,7 +45,6 @@ export default function CertificatesSection() {
                 <ResponsiveImage
                   src={cert.src}
                   alt={cert.title}
-                  aspectRatio="aspect-[4/3]"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
                   <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-75 group-hover:scale-100">

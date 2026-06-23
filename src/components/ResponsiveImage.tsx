@@ -6,7 +6,7 @@ interface ResponsiveImageProps {
   alt: string;
   containerClassName?: string;
   imageClassName?: string;
-  aspectRatio?: string;
+  height?: string;
   priority?: boolean;
   sizes?: string;
 }
@@ -16,15 +16,15 @@ export default function ResponsiveImage({
   alt,
   containerClassName,
   imageClassName,
-  aspectRatio = "aspect-[4/3]",
+  height = "h-[280px]",
   priority = false,
   sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
 }: ResponsiveImageProps) {
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden bg-wine/30",
-        aspectRatio,
+        "relative w-full bg-white flex items-center justify-center overflow-hidden",
+        height,
         containerClassName
       )}
     >
@@ -34,7 +34,7 @@ export default function ResponsiveImage({
         fill
         priority={priority}
         sizes={sizes}
-        className={cn("object-cover object-center", imageClassName)}
+        className={cn("object-contain object-center", imageClassName)}
       />
     </div>
   );

@@ -93,13 +93,12 @@ export default function PricingCards() {
                   <ResponsiveImage
                     src={pkg.image}
                     alt={pkg.name}
-                    aspectRatio="aspect-[4/3]"
-                    containerClassName="group-hover:scale-[1.03] transition-transform duration-[0.4s] ease-[ease] will-change-transform rounded-t-[20px]"
+                    containerClassName="rounded-t-[20px]"
                   />
                 ) : (
                   <div
                     className={cn(
-                      "w-full aspect-[4/3] flex items-center justify-center",
+                      "w-full h-[280px] flex items-center justify-center",
                       gradientPlaceholders[idx % gradientPlaceholders.length]
                     )}
                   >

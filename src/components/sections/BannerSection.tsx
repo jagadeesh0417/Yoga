@@ -14,7 +14,7 @@ export default function BannerSection() {
         className="relative w-full aspect-[4/1]"
       >
         <Image
-          src="/images/banner.png"
+          src="/images/gallery-2.png"
           alt="MYSTIC YOGA"
           fill
           className="object-contain mx-auto"

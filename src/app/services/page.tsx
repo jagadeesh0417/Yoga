@@ -48,7 +48,6 @@ function ServiceSection({
           <ResponsiveImage
             src={service.image}
             alt={service.title}
-            aspectRatio="aspect-[4/3]"
             containerClassName="transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />

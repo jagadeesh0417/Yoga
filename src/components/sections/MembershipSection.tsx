@@ -103,7 +103,6 @@ export default function MembershipSection() {
                     <ResponsiveImage
                       src={(plan as any).image}
                       alt={plan.name}
-                      aspectRatio="aspect-[4/3]"
                     />
                   </div>
                 )}
