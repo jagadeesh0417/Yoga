@@ -94,9 +94,9 @@ export const classPackages = [
 ];
 
 export const membershipPlans = [
-  { name: 'Silver', price: 49, currency: 'USD', period: 'Month', type: 'Silver', popular: false, features: ['12 Live Classes Monthly', 'Recorded Sessions', 'Community Access', 'Basic Wellness Guidance'] },
-  { name: 'Gold', price: 99, currency: 'USD', period: 'Month', type: 'Gold', popular: true, features: ['Unlimited Yoga Classes', 'Meditation Programs', 'Nutrition Guidance', 'Monthly Wellness Assessment', 'Priority Support'] },
-  { name: 'Platinum', price: 199, currency: 'USD', period: 'Month', type: 'Platinum', popular: false, features: ['Unlimited Classes', 'Personal Coaching', 'Customized Wellness Plan', 'Monthly Private Consultation', 'VIP Community Access'] },
+  { name: 'Silver', price: 2000, currency: 'HKD', period: 'Month', type: 'Silver', popular: false, image: '/images/silver.png', features: ['12 Live Classes Monthly', 'Recorded Sessions', 'Community Access', 'Basic Wellness Guidance'] },
+  { name: 'Gold', price: 5000, currency: 'HKD', period: 'Month', type: 'Gold', popular: true, image: '/images/gold.png', features: ['Unlimited Yoga Classes', 'Meditation Programs', 'Nutrition Guidance', 'Monthly Wellness Assessment', 'Priority Support'] },
+  { name: 'Platinum', price: 199, currency: 'USD', period: 'Month', type: 'Platinum', popular: false, image: '/images/platinum.png', features: ['Unlimited Classes', 'Personal Coaching', 'Customized Wellness Plan', 'Monthly Private Consultation', 'VIP Community Access'] },
   { name: 'Elite Transformation', price: 999, currency: 'USD', period: '12 Weeks', type: 'Elite', popular: false, features: ['Personal Coaching', 'Yoga Training', 'Meditation Training', 'Nutrition Guidance', 'Lifestyle Assessment', 'Weekly Accountability Sessions', 'Transformation Tracking'] },
 ];
 

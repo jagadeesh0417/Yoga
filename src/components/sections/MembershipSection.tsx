@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
+import ResponsiveImage from "@/components/ResponsiveImage";
 import { membershipPlans } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import PaymentModal from "@/components/sections/PaymentModal";
@@ -92,8 +93,18 @@ export default function MembershipSection() {
                 )}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gold text-wine text-xs font-semibold uppercase tracking-wider">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gold text-wine text-xs font-semibold uppercase tracking-wider z-10">
                     Popular
+                  </div>
+                )}
+
+                {('image' in plan) && (plan as any).image && (
+                  <div className="-mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-6">
+                    <ResponsiveImage
+                      src={(plan as any).image}
+                      alt={plan.name}
+                      aspectRatio="aspect-[4/3]"
+                    />
                   </div>
                 )}
 
