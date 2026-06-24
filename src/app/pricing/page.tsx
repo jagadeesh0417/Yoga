@@ -6,7 +6,6 @@ import {
   Check,
   Sparkles,
   ChevronDown,
-  MessageCircle,
   ArrowRight,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -260,17 +259,12 @@ export default function PricingPage() {
                     Book Now
                   </button>
                   <div className="flex gap-2">
-                    <button className="flex-1 py-2.5 rounded-xl text-sm font-medium text-ivory/70 border border-white/10 hover:bg-white/10 hover:text-ivory transition-all duration-300">
-                      Contact
-                    </button>
-                    <a
-                      href={whatsappLink()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-2.5 px-3 rounded-xl border border-white/10 text-ivory/70 hover:bg-green-500/20 hover:text-green-400 hover:border-green-500/30 transition-all duration-300"
+                    <Link
+                      href="/contact"
+                      className="flex-1 py-2.5 rounded-xl text-sm font-medium text-ivory/70 border border-white/10 hover:bg-white/10 hover:text-ivory transition-all duration-300 text-center"
                     >
-                      <MessageCircle className="w-4 h-4" />
-                    </a>
+                      Contact
+                    </Link>
                   </div>
                 </div>
                 </div>
