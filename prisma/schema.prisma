@@ -44,6 +44,8 @@ model PaymentSubmission {
   plan          String
   paymentMethod String
   reference     String   @unique
+  message       String?
+  screenshot    String?
   status        String   @default("PENDING")
   createdAt     DateTime @default(now())
 }

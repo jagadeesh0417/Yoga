@@ -12,6 +12,7 @@ import {
   Loader2,
   Copy,
   CheckCheck,
+  Eye,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -23,6 +24,8 @@ interface Payment {
   plan: string;
   paymentMethod: string;
   reference: string;
+  message: string | null;
+  screenshot: string | null;
   status: string;
   createdAt: string;
 }
@@ -47,6 +50,7 @@ export default function AdminPaymentsPage() {
   const [showFilter, setShowFilter] = useState(false);
   const [updating, setUpdating] = useState<string | null>(null);
   const [copiedRef, setCopiedRef] = useState<string | null>(null);
+  const [previewImg, setPreviewImg] = useState<string | null>(null);
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
 
   useEffect(() => {
@@ -225,7 +229,13 @@ export default function AdminPaymentsPage() {
                     Method
                   </th>
                   <th className="text-left px-4 py-3 font-medium text-wine/50 text-xs uppercase tracking-wider">
+                    Message
+                  </th>
+                  <th className="text-left px-4 py-3 font-medium text-wine/50 text-xs uppercase tracking-wider">
                     Reference
+                  </th>
+                  <th className="text-left px-4 py-3 font-medium text-wine/50 text-xs uppercase tracking-wider">
+                    Screenshot
                   </th>
                   <th className="text-left px-4 py-3 font-medium text-wine/50 text-xs uppercase tracking-wider">
                     Status
@@ -266,6 +276,11 @@ export default function AdminPaymentsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
+                      <p className="text-xs text-wine/50 truncate max-w-[180px]">
+                        {payment.message || <span className="italic">—</span>}
+                      </p>
+                    </td>
+                    <td className="px-4 py-3">
                       <button
                         onClick={() =>
                           handleCopy(payment.reference, payment.id)
@@ -279,6 +294,19 @@ export default function AdminPaymentsPage() {
                           <Copy size={12} />
                         )}
                       </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      {payment.screenshot ? (
+                        <button
+                          onClick={() => setPreviewImg(payment.screenshot)}
+                          className="inline-flex items-center gap-1 text-xs text-gold hover:text-wine transition-colors"
+                        >
+                          <Eye size={14} />
+                          View
+                        </button>
+                      ) : (
+                        <span className="text-xs text-wine/30 italic">No file</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -350,6 +378,21 @@ export default function AdminPaymentsPage() {
           </div>
         )}
       </div>
+
+      {/* Screenshot preview modal */}
+      {previewImg && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewImg(null)}>
+          <div className="relative max-w-lg w-full bg-white rounded-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="relative w-full h-[400px]">
+              <img src={previewImg} alt="Payment screenshot" className="w-full h-full object-contain" />
+            </div>
+            <div className="p-4 flex justify-end">
+              <button onClick={() => setPreviewImg(null)}
+                className="px-4 py-2 rounded-lg bg-wine text-white text-sm font-medium hover:bg-wine/90 transition-colors">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
