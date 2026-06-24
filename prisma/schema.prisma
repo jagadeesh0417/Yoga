@@ -47,3 +47,16 @@ model PaymentSubmission {
   status        String   @default("PENDING")
   createdAt     DateTime @default(now())
 }
+
+model EnquirySubmission {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  phone         String?
+  message       String?
+  paymentMethod String
+  reference     String   @unique
+  screenshot    String?
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
+}
