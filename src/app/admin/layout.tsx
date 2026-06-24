@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   Wallet,
+  MessageSquare,
 } from 'lucide-react';
 
 const navItems = [
@@ -29,6 +30,7 @@ const navItems = [
   { label: 'Pricing', href: '/admin/pricing', icon: DollarSign },
   { label: 'Memberships', href: '/admin/memberships', icon: Users },
   { label: 'Payments', href: '/admin/payments', icon: Wallet },
+  { label: 'Enquiries', href: '/admin/enquiries', icon: MessageSquare },
   { label: 'Contact', href: '/admin/contact', icon: HelpCircle },
   { label: 'FAQs', href: '/admin/faqs', icon: HelpCircle },
   { label: 'Retreats', href: '/admin/retreats', icon: Palmtree },

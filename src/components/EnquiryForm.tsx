@@ -1,24 +1,29 @@
 'use client';
 
 import { useState, useEffect, type FormEvent } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function EnquiryForm() {
+  const pathname = usePathname();
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const isAdmin = pathname?.startsWith('/admin');
+
   useEffect(() => {
+    if (isAdmin) return;
     const seen = localStorage.getItem('enquiry-seen');
     if (!seen) {
       const timer = setTimeout(() => setShow(true), 3000);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isAdmin]);
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -34,15 +39,14 @@ export default function EnquiryForm() {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('/api/enquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
           phone: form.phone,
-          subject: 'Website Enquiry',
-          message: form.message || 'No message provided',
+          message: form.message || null,
         }),
       });
       if (!res.ok) throw new Error('Failed');
