@@ -15,35 +15,40 @@ interface PaymentModalProps {
   planPrice?: string;
 }
 
-type PaymentMethod = 'razorpay' | 'alipay' | 'fps' | null;
+type PaymentMethod = 'gpay' | 'phonpe' | 'alipay' | 'fps' | null;
 type Step = 'details' | 'payment' | 'upload' | 'success';
 
 const methodIcons: Record<string, React.ReactNode> = {
-  razorpay: <Wallet className="w-6 h-6 text-blue-500" />,
-  alipay: <CreditCard className="w-6 h-6 text-green-500" />,
-  fps: <Smartphone className="w-6 h-6 text-purple-500" />,
+  gpay: <Smartphone className="w-6 h-6 text-blue-500" />,
+  phonpe: <Smartphone className="w-6 h-6 text-purple-500" />,
+  alipay: <Wallet className="w-6 h-6 text-blue-500" />,
+  fps: <CreditCard className="w-6 h-6 text-green-500" />,
 };
 
 const methodColors: Record<string, string> = {
-  razorpay: 'bg-blue-50 group-hover:bg-blue-100',
-  alipay: 'bg-green-50 group-hover:bg-green-100',
-  fps: 'bg-purple-50 group-hover:bg-purple-100',
+  gpay: 'bg-blue-50 group-hover:bg-blue-100',
+  phonpe: 'bg-purple-50 group-hover:bg-purple-100',
+  alipay: 'bg-blue-50 group-hover:bg-blue-100',
+  fps: 'bg-green-50 group-hover:bg-green-100',
 };
 
 const methodLabels: Record<string, string> = {
-  razorpay: 'Razorpay',
+  gpay: 'Google Pay',
+  phonpe: 'PhonePe',
   alipay: 'Alipay',
   fps: 'FPS',
 };
 
 const methodDescs: Record<string, string> = {
-  razorpay: 'Pay with Razorpay UPI / Card / Net Banking',
+  gpay: 'Pay with GPay QR code',
+  phonpe: 'Pay with PhonePe QR code',
   alipay: 'Pay with Alipay QR code',
   fps: 'Pay with Faster Payment System',
 };
 
 const qrImages: Record<string, string> = {
-  razorpay: '/images/razorpay-qr.png',
+  gpay: '/images/gpay.png',
+  phonpe: '/images/phonpe.png',
   alipay: '/images/alipay-qr.png',
   fps: '/images/fps-qr.png',
 };
@@ -233,7 +238,7 @@ export default function PaymentModal({
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
                     <p className="text-wine/60 text-sm mb-6">Select your payment method.</p>
                     <div className="space-y-3">
-                      {(['razorpay', 'alipay', 'fps'] as const).map((m) => (
+                      {(['gpay', 'phonpe', 'alipay', 'fps'] as const).map((m) => (
                         <button key={m} onClick={() => { setMethod(m); setStep('upload'); }}
                           className="w-full p-4 rounded-xl border-2 border-beige hover:border-gold/50 hover:bg-gold/5 transition-all flex items-center gap-4 group">
                           <div className={cn('w-12 h-12 rounded-xl flex items-center justify-center transition-colors', methodColors[m])}>
