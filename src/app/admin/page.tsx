@@ -30,7 +30,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     setTimeout(() => {
-      if (username === 'admin' && password === 'mystic2024') {
+      if (username === 'Mystic_Sunita' && password === 'Sunita240901') {
         localStorage.setItem('admin_authenticated', 'true');
         router.replace('/admin/dashboard');
       } else {
