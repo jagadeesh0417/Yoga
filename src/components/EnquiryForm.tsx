@@ -49,12 +49,27 @@ export default function EnquiryForm() {
           message: form.message || null,
         }),
       });
-      if (!res.ok) throw new Error('Failed');
-      setSubmitted(true);
-      localStorage.setItem('enquiry-seen', 'true');
-    } catch {
-      setErrors({ submit: 'Failed to send. Please try again.' });
-    } finally {
+  if (!res.ok) throw new Error('Failed');
+
+setSubmitted(true);
+localStorage.setItem('enquiry-seen', 'true');
+setSubmitted(true);
+localStorage.setItem("enquiry-seen", "true");
+
+const whatsappMessage = `🙏 New Yoga Enquiry
+
+Name: ${form.name}
+Email: ${form.email}
+Phone: ${form.phone}
+
+Message:
+${form.message || "No message provided"}
+`;
+
+window.open(
+  `https://wa.me/919164081909?text=${encodeURIComponent(whatsappMessage)}`,
+  "_blank"
+);    } finally {
       setSubmitting(false);
     }
   };
