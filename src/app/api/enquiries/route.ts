@@ -3,16 +3,35 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, phone, message } = await req.json();
-    if (!name || !email) {
-      return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
-    }
+    const body = await req.json()
+
+    console.log("Received:", body)
+
     const enquiry = await prisma.enquiry.create({
-      data: { name, email, phone: phone || null, message: message || null },
-    });
-    return NextResponse.json({ success: true, enquiry }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Failed to submit enquiry" }, { status: 500 });
+      data: {
+        name: body.name,
+        email: body.email,
+        phone: body.phone || null,
+        message: body.message || null,
+      },
+    })
+
+    console.log("Saved:", enquiry)
+
+    return NextResponse.json({
+      success: true,
+      enquiry,
+    })
+  } catch (error) {
+    console.error(error)
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: String(error),
+      },
+      { status: 500 }
+    )
   }
 }
 

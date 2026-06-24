@@ -3,21 +3,21 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Service {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
-  slug        String   @unique
+  slug        String    @unique
   description String
   price       Float?
   duration    String?
   image       String?
-  published   Boolean  @default(true)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
+  published   Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
   bookings    Booking[]
 }
 
@@ -58,4 +58,3 @@ model Enquiry {
   message   String?
   createdAt DateTime @default(now())
 }
-
