@@ -8,7 +8,6 @@ import {
   Mail,
   MessageCircle,
   Send,
-  CheckCircle,
   AlertCircle,
   ChevronDown,
 } from 'lucide-react';
@@ -62,8 +61,6 @@ export default function ContactPage() {
     message: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const validate = (): boolean => {
@@ -87,7 +84,6 @@ export default function ContactPage() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    setSubmitting(true);
 
     const msg = [
       "New Contact Request",
@@ -101,13 +97,10 @@ export default function ContactPage() {
 
     const url = whatsappUrl(msg);
 
-    setTimeout(() => {
-      setSubmitting(false);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      window.open(url, '_blank', 'noopener,noreferrer');
-      setSubmitted(true);
-      setTimeout(() => setSubmitted(false), 5000);
-    }, 500);
+    window.open(url, '_blank', 'noopener,noreferrer');
+
+    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+    setErrors({});
   };
 
   const handleChange = (
@@ -420,33 +413,12 @@ export default function ContactPage() {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    disabled={submitting}
-                    className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-wine hover:bg-wine/90 disabled:bg-wine/60 text-ivory font-semibold text-sm transition-all duration-300 shadow-lg shadow-wine/20 hover:shadow-wine/30"
+                    className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-wine to-purple text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-wine/20 hover:shadow-wine/30"
                   >
-                    {submitting ? (
-                      <div className="w-5 h-5 border-2 border-ivory/30 border-t-ivory rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        Send Message
-                        <Send size={16} />
-                      </>
-                    )}
+                    Send Message
+                    <Send size={16} />
                   </button>
                 </div>
-
-                <AnimatePresence>
-                  {submitted && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="mt-4 px-4 py-3 rounded-xl bg-wine/10 text-wine text-sm font-medium inline-flex items-center gap-2 w-full"
-                    >
-                      <CheckCircle size={16} />
-                      Redirecting to WhatsApp...
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </form>
             </motion.div>
           </div>

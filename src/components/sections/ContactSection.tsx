@@ -8,7 +8,6 @@ import {
   Mail,
   MessageCircle,
   Send,
-  CheckCircle,
   AlertCircle,
 } from "lucide-react";
 import {
@@ -18,7 +17,7 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import SectionTitle from "@/components/SectionTitle";
-import { siteConfig, blogPosts } from "@/lib/data";
+import { siteConfig } from "@/lib/data";
 import { cn, whatsappLink } from "@/lib/utils";
 import { whatsappUrl } from "@/lib/constants";
 import type { ContactFormData } from "@/lib/types";
@@ -80,8 +79,6 @@ export default function ContactSection() {
     message: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -92,7 +89,6 @@ export default function ContactSection() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
     }
-    if (!formData.subject.trim()) newErrors.subject = "Subject is required";
     if (!formData.message.trim()) {
       newErrors.message = "Message is required";
     } else if (formData.message.trim().length < 10) {
@@ -105,30 +101,23 @@ export default function ContactSection() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log("[EnquiryForm] Submit triggered");
     if (!validate()) return;
 
-    setSubmitting(true);
-
     const msg = [
-      "Hello, I would like to make an enquiry.",
+      "New Yoga Enquiry",
       "",
       `Name: ${formData.name}`,
-      `Phone: ${formData.phone || "Not provided"}`,
       `Email: ${formData.email}`,
-      `Subject: ${formData.subject}`,
+      `Phone: ${formData.phone || "Not provided"}`,
       `Message: ${formData.message}`,
     ].join("\n");
 
     const url = whatsappUrl(msg);
-    console.log("[EnquiryForm] Opening WhatsApp URL:", url);
 
     window.open(url, "_blank", "noopener,noreferrer");
 
     setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-    setSubmitting(false);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
+    setErrors({});
   };
 
   const handleChange = (
@@ -387,30 +376,12 @@ export default function ContactSection() {
               <div className="mt-6">
                 <button
                   type="submit"
-                  disabled={submitting}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-wine to-purple disabled:from-wine/60 disabled:to-purple/60 text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-wine/20 hover:shadow-wine/30"
+                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-wine to-purple text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-wine/20 hover:shadow-wine/30"
                 >
-                  {submitting ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      Send Message
-                      <Send size={16} />
-                    </>
-                  )}
+                  Submit Enquiry
+                  <Send size={16} />
                 </button>
               </div>
-
-              {submitted && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 px-4 py-3 rounded-xl bg-wine/10 text-wine text-sm font-medium inline-flex items-center gap-2 w-full"
-                >
-                  <CheckCircle size={16} />
-                  Redirecting to WhatsApp...
-                </motion.div>
-              )}
             </form>
           </motion.div>
         </div>
