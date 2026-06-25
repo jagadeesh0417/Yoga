@@ -19,8 +19,8 @@ import {
 } from "react-icons/fa";
 import SectionTitle from "@/components/SectionTitle";
 import { siteConfig, blogPosts } from "@/lib/data";
-import { cn } from "@/lib/utils";
-import { whatsappLink } from "@/lib/utils";
+import { cn, whatsappLink } from "@/lib/utils";
+import { whatsappUrl } from "@/lib/constants";
 import type { ContactFormData } from "@/lib/types";
 
 interface FormErrors {
@@ -108,12 +108,26 @@ export default function ContactSection() {
     if (!validate()) return;
 
     setSubmitting(true);
+
+    const msg = [
+      "Hello, I would like to make an enquiry.",
+      "",
+      `Name: ${formData.name}`,
+      `Phone: ${formData.phone || "Not provided"}`,
+      `Email: ${formData.email}`,
+      `Subject: ${formData.subject}`,
+      `Message: ${formData.message}`,
+    ].join("\n");
+
+    const url = whatsappUrl(msg);
+
     setTimeout(() => {
-      setSubmitted(true);
       setSubmitting(false);
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      window.open(url, "_blank", "noopener,noreferrer");
+      setSubmitted(true);
       setTimeout(() => setSubmitted(false), 5000);
-    }, 1000);
+    }, 500);
   };
 
   const handleChange = (
@@ -393,7 +407,7 @@ export default function ContactSection() {
                   className="mt-4 px-4 py-3 rounded-xl bg-wine/10 text-wine text-sm font-medium inline-flex items-center gap-2 w-full"
                 >
                   <CheckCircle size={16} />
-                  Thank you! Your message has been sent successfully.
+                  Redirecting to WhatsApp...
                 </motion.div>
               )}
             </form>

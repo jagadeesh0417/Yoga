@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { WHATSAPP_NUMBER } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
@@ -25,7 +26,7 @@ export function slugify(text: string): string {
 }
 
 export const whatsappLink = (message: string = "Hi! I'm interested in MYSTIC YOGA™ programs.") => {
-  return `https://wa.me/85244644381?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 };
 
 export const bookConsultationLink = 'https://calendly.com/mysticyoga/consultation';

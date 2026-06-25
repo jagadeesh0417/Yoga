@@ -7,10 +7,12 @@ import {
   Sparkles,
   ChevronDown,
   ArrowRight,
+  MessageCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { classPackages, membershipPlans, faqs } from '@/lib/data';
-import { cn, whatsappLink, bookConsultationLink } from '@/lib/utils';
+import { cn, bookConsultationLink } from '@/lib/utils';
+import { whatsappUrl } from '@/lib/constants';
 import SectionTitle from '@/components/SectionTitle';
 import PaymentModal from '@/components/sections/PaymentModal';
 import ResponsiveImage from '@/components/ResponsiveImage';
@@ -259,12 +261,38 @@ export default function PricingPage() {
                     Book Now
                   </button>
                   <div className="flex gap-2">
-                    <Link
-                      href="/contact"
-                      className="flex-1 py-2.5 rounded-xl text-sm font-medium text-ivory/70 border border-white/10 hover:bg-white/10 hover:text-ivory transition-all duration-300 text-center"
+                    <button
+                      onClick={() => {
+                        const msg = [
+                          `Hello, I am interested in the following plan:`,
+                          "",
+                          `Plan: ${pkg.name}`,
+                          `Price: ${pkg.currency} ${pkg.price.toLocaleString()}`,
+                          "",
+                          "Please contact me with more details.",
+                        ].join("\n");
+                        window.open(whatsappUrl(msg), "_blank", "noopener,noreferrer");
+                      }}
+                      className="flex-1 py-2.5 rounded-xl text-sm font-medium text-ivory/70 border border-white/10 hover:bg-white/10 hover:text-ivory transition-all duration-300"
                     >
                       Contact
-                    </Link>
+                    </button>
+                    <button
+                      onClick={() => {
+                        const msg = [
+                          `Hello, I am interested in the following plan:`,
+                          "",
+                          `Plan: ${pkg.name}`,
+                          `Price: ${pkg.currency} ${pkg.price.toLocaleString()}`,
+                          "",
+                          "Please contact me with more details.",
+                        ].join("\n");
+                        window.open(whatsappUrl(msg), "_blank", "noopener,noreferrer");
+                      }}
+                      className="py-2.5 px-3 rounded-xl border border-white/10 text-ivory/70 hover:bg-green-500/20 hover:text-green-400 hover:border-green-500/30 transition-all duration-300"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
                 </div>
@@ -370,7 +398,20 @@ export default function PricingPage() {
                     >
                       Join Now
                     </button>
-                    <button className="w-full py-2.5 rounded-xl text-sm font-medium text-ivory/50 border border-white/10 hover:bg-white/10 hover:text-ivory/70 transition-all duration-300">
+                    <button
+                      onClick={() => {
+                        const msg = [
+                          `Hello, I am interested in the following plan:`,
+                          "",
+                          `Plan: ${plan.name}`,
+                          `Price: ${plan.currency || ''} ${plan.price}`,
+                          "",
+                          "Please contact me with more details.",
+                        ].join("\n");
+                        window.open(whatsappUrl(msg), "_blank", "noopener,noreferrer");
+                      }}
+                      className="w-full py-2.5 rounded-xl text-sm font-medium text-ivory/50 border border-white/10 hover:bg-white/10 hover:text-ivory/70 transition-all duration-300"
+                    >
                       Contact
                     </button>
                   </div>
@@ -471,8 +512,8 @@ export default function PricingPage() {
               <ArrowRight size={16} />
             </Link>
             <Link
-              href={whatsappLink(
-                'Hi! I have a question about the pricing and plans at MYSTIC YOGAâ„¢.'
+              href={whatsappUrl(
+                'Hi! I have a question about the pricing and plans at MYSTIC YOGA.'
               )}
               target="_blank"
               rel="noopener noreferrer"

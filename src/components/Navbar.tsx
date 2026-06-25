@@ -65,10 +65,10 @@ export default function Navbar() {
     <>
       <nav
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-500",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
           scrolled
-            ? "shadow-lg shadow-black/5"
-            : ""
+            ? "bg-wine/95 backdrop-blur-xl shadow-lg shadow-black/10"
+            : "bg-transparent"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,7 +92,7 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link)}
-                  className="relative px-3 py-2 text-sm font-medium text-wine/70 hover:text-wine transition-colors duration-200 group"
+                  className="relative px-3 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors duration-200 group"
                 >
                   {link.label}
                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gold rounded-full transition-all duration-300 group-hover:w-4/5" />
@@ -108,7 +108,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden p-2 text-wine hover:text-gold transition-colors"
+              className="lg:hidden p-2 text-white hover:text-gold transition-colors"
               aria-label="Open menu"
             >
               <Menu size={24} />
@@ -133,15 +133,15 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] bg-white/95 backdrop-blur-xl border-l border-wine/10 shadow-2xl"
+              className="fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] bg-wine/95 backdrop-blur-xl border-l border-white/10 shadow-2xl"
             >
-              <div className="flex items-center justify-between p-4 border-b border-wine/10">
-                <span className="font-serif text-lg font-bold text-gradient-wine-purple">
+              <div className="flex items-center justify-between p-4 border-b border-white/10">
+                <span className="font-serif text-lg font-bold text-white">
                   MYSTIC YOGA<small className="text-[0.45em] align-super">™</small>
                 </span>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="p-2 text-wine/70 hover:text-wine transition-colors"
+                  className="p-2 text-white/70 hover:text-white transition-colors"
                   aria-label="Close menu"
                 >
                   <X size={22} />
@@ -156,7 +156,7 @@ export default function Navbar() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex items-center gap-2 px-4 py-3 text-base font-medium text-wine/70 hover:text-wine hover:bg-wine/5 rounded-lg transition-all"
+                    className="flex items-center gap-2 px-4 py-3 text-base font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                   >
                     {link.label}
                     <ChevronDown size={14} className="ml-auto -rotate-90 opacity-50" />

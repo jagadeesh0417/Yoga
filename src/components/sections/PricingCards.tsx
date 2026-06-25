@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import { Check, MessageCircle } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import { classPackages } from "@/lib/data";
-import { cn, whatsappLink } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { whatsappUrl } from "@/lib/constants";
 import PaymentModal from "@/components/sections/PaymentModal";
 import ResponsiveImage from "@/components/ResponsiveImage";
 
@@ -163,17 +164,38 @@ export default function PricingCards() {
                     Book Now
                   </button>
                   <div className="flex gap-2">
-                    <button className="flex-1 py-2.5 rounded-xl text-sm font-medium text-wine/70 border border-wine/10 hover:bg-wine/5 hover:text-wine transition-all duration-300">
+                    <button
+                      onClick={() => {
+                        const msg = [
+                          `Hello, I am interested in the following plan:`,
+                          "",
+                          `Plan: ${pkg.name}`,
+                          `Price: ${pkg.currency} ${pkg.price.toLocaleString()}`,
+                          "",
+                          "Please contact me with more details.",
+                        ].join("\n");
+                        window.open(whatsappUrl(msg), "_blank", "noopener,noreferrer");
+                      }}
+                      className="flex-1 py-2.5 rounded-xl text-sm font-medium text-wine/70 border border-wine/10 hover:bg-wine/5 hover:text-wine transition-all duration-300"
+                    >
                       Contact
                     </button>
-                    <a
-                      href={whatsappLink()}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => {
+                        const msg = [
+                          `Hello, I am interested in the following plan:`,
+                          "",
+                          `Plan: ${pkg.name}`,
+                          `Price: ${pkg.currency} ${pkg.price.toLocaleString()}`,
+                          "",
+                          "Please contact me with more details.",
+                        ].join("\n");
+                        window.open(whatsappUrl(msg), "_blank", "noopener,noreferrer");
+                      }}
                       className="py-2.5 px-3 rounded-xl border border-wine/10 text-wine/70 hover:bg-green-500/20 hover:text-green-400 hover:border-green-500/30 transition-all duration-300"
                     >
                       <MessageCircle className="w-4 h-4" />
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
