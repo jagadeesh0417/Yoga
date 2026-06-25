@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Phone, Mail, User, Clock, MessageSquare } from "lucide-react";
+import { WHATSAPP_NUMBER } from "@/lib/constants";
 
 const services = [
   "Yoga Classes",
@@ -87,7 +88,7 @@ export default function EnquiryModal() {
     setToast("Redirecting to WhatsApp...");
 
     window.open(
-      `https://wa.me/919164081909?text=${encodeURIComponent(msg)}`,
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,
       "_blank"
     );
 
