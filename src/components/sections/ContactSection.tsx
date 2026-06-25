@@ -105,6 +105,7 @@ export default function ContactSection() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    console.log("[EnquiryForm] Submit triggered");
     if (!validate()) return;
 
     setSubmitting(true);
@@ -120,14 +121,14 @@ export default function ContactSection() {
     ].join("\n");
 
     const url = whatsappUrl(msg);
+    console.log("[EnquiryForm] Opening WhatsApp URL:", url);
 
-    setTimeout(() => {
-      setSubmitting(false);
-      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-      window.open(url, "_blank", "noopener,noreferrer");
-      setSubmitted(true);
-      setTimeout(() => setSubmitted(false), 5000);
-    }, 500);
+    window.open(url, "_blank", "noopener,noreferrer");
+
+    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+    setSubmitting(false);
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 5000);
   };
 
   const handleChange = (
