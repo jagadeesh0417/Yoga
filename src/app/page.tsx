@@ -14,6 +14,7 @@ import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import BlogSection from '@/components/sections/BlogSection';
 import TeacherTrainingSection from '@/components/sections/TeacherTrainingSection';
 import CertificatesSection from '@/components/sections/CertificatesSection';
+import EnquirySection from '@/components/sections/EnquirySection';
 import CTASection from '@/components/sections/CTASection';
 
 export default function HomePage() {
@@ -33,6 +34,7 @@ export default function HomePage() {
       <TestimonialsSection />
       <BlogSection />
       <TeacherTrainingSection />
+      <EnquirySection />
       <CTASection />
     </main>
   );

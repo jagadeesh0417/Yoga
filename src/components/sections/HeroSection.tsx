@@ -193,6 +193,14 @@ export default function HeroSection() {
             </button>
           </MagneticButton>
           <MagneticButton>
+            <button
+              onClick={() => document.getElementById("enquiry")?.scrollIntoView({ behavior: "smooth" })}
+              className="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-gold font-semibold text-base tracking-wide transition-all duration-300 hover:bg-gold/20 hover:border-gold/60"
+            >
+              Enquire Now
+            </button>
+          </MagneticButton>
+          <MagneticButton>
             <button className="px-8 py-4 rounded-full bg-transparent border border-ivory/30 text-ivory font-medium text-base tracking-wide transition-all duration-300 hover:bg-white/5 hover:border-ivory/50">
               Explore Programs
             </button>
