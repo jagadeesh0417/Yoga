@@ -8,7 +8,6 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import ScrollProgress from "@/components/animations/ScrollProgress";
 import MouseGlow from "@/components/animations/MouseGlow";
 import LoadingScreen from "@/components/animations/LoadingScreen";
-import EnquiryForm from "@/components/EnquiryForm";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -70,7 +69,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <LoadingScreen />
-        <EnquiryForm />
         <ScrollProgress />
         <MouseGlow />
         <Navbar />
