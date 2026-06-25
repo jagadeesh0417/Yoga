@@ -18,7 +18,6 @@ const navLinks = [
   { label: "Testimonials", href: "/testimonials", section: false },
   { label: "Blog", href: "/blog", section: false },
   { label: "Training", href: "/training", section: false },
-  { label: "Enquiry", href: "#enquiry", section: true },
   { label: "Contact", href: "/contact", section: false },
 ];
 

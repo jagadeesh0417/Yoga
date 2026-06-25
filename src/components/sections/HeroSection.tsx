@@ -194,7 +194,7 @@ export default function HeroSection() {
           </MagneticButton>
           <MagneticButton>
             <button
-              onClick={() => document.getElementById("enquiry")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => window.dispatchEvent(new CustomEvent("trigger-enquiry"))}
               className="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-gold font-semibold text-base tracking-wide transition-all duration-300 hover:bg-gold/20 hover:border-gold/60"
             >
               Enquire Now
