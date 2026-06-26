@@ -14,6 +14,7 @@ const navLinks = [
   { label: "Philosophy", href: "/philosophy", section: false },
   { label: "Services", href: "/services", section: false },
   { label: "Pricing", href: "/pricing", section: false },
+  { label: "Shop", href: "/shop", section: false },
   { label: "Gallery", href: "/gallery", section: false },
   { label: "Testimonials", href: "/testimonials", section: false },
   { label: "Blog", href: "/blog", section: false },

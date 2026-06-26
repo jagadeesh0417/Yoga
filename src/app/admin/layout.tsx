@@ -19,6 +19,10 @@ import {
   X,
   Wallet,
   MessageSquare,
+  ShoppingBag,
+  Package,
+  Truck,
+  Tags,
 } from 'lucide-react';
 
 const navItems = [
@@ -34,6 +38,10 @@ const navItems = [
   { label: 'Contact', href: '/admin/contact', icon: HelpCircle },
   { label: 'FAQs', href: '/admin/faqs', icon: HelpCircle },
   { label: 'Retreats', href: '/admin/retreats', icon: Palmtree },
+  { label: 'Shop Overview', href: '/admin/shop', icon: ShoppingBag },
+  { label: 'Products', href: '/admin/shop/products', icon: Package },
+  { label: 'Orders', href: '/admin/shop/orders', icon: Truck },
+  { label: 'Coupons', href: '/admin/shop/coupons', icon: Tags },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
