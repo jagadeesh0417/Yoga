@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: Inter, system-ui, sans-serif;
+  --color-wine-50: #FDF2F4;
+  --color-wine-100: #F9D6DE;
+  --color-wine-200: #F0A5B5;
+  --color-wine-300: #E7748B;
+  --color-wine-400: #DE4362;
+  --color-wine-500: #8B1E3F;
+  --color-wine-600: #6E1632;
+  --color-wine-700: #511025;
+  --color-wine-800: #350A18;
+  --color-wine-900: #1A050C;
+  --color-purple-50: #F5F0FB;
+  --color-purple-100: #DFD0F0;
+  --color-purple-200: #BF9DE0;
+  --color-purple-300: #9F6AD0;
+  --color-purple-400: #7D37C0;
+  --color-purple-500: #5B2A9D;
+  --color-purple-600: #49227E;
+  --color-purple-700: #371A5E;
+  --color-purple-800: #24113E;
+  --color-purple-900: #12091F;
+  --color-gold-50: #FCF7F1;
+  --color-gold-100: #F5E6D3;
+  --color-gold-200: #EACDA7;
+  --color-gold-300: #DFB47B;
+  --color-gold-400: #D4A373;
+  --color-gold-500: #C48E4E;
+  --color-gold-600: #9E6E3A;
+  --color-gold-700: #784F26;
+  --color-gold-800: #523012;
+  --color-gold-900: #2C1A08;
+  --color-ivory-50: #FFFFFF;
+  --color-ivory-100: #FFF9F7;
+  --color-ivory-200: #FFEDE5;
+  --color-ivory-300: #FFE1D3;
+  --color-ivory-400: #FFD5C1;
+  --color-ivory-500: #F5C4A8;
+  --color-ivory-600: #E0A07A;
+  --color-ivory-700: #CC7C4C;
+  --color-ivory-800: #A85E2E;
+  --color-ivory-900: #70401E;
+  --color-wine: var(--color-wine-500);
+  --color-purple: var(--color-purple-500);
+  --color-gold: var(--color-gold-400);
+  --color-ivory: var(--color-ivory-100);
+}
+
+@layer base {
+  body {
+    @apply font-sans text-gray-800 bg-ivory-50 m-0;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
