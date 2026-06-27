@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       order,
       razorpay_order_id: order.razorpayOrderId,
       amount: total * 100,
-      currency: "INR",
+      currency: currency || "HKD",
     });
   } catch (error) {
     console.error("Create order error:", error);

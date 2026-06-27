@@ -133,6 +133,7 @@ function initStore() {
         { id: "2", name: "Arun Mehta", location: "Delhi, India", rating: 5, text: "The corporate wellness program was incredible. Our team's productivity and morale improved significantly.", image: "", featured: true, createdAt: new Date().toISOString() },
       ] as StoredTestimonial[],
       testimonialsNextId: 3,
+      orders: [] as Record<string, unknown>[],
       memberships: [
         { id: "1", name: "Starter", price: 29, interval: "month", features: ["Weekly yoga classes", "Basic meditation guides", "Community access"], popular: false, published: true, stripePriceId: "" },
         { id: "2", name: "Wellness", price: 59, interval: "month", features: ["Unlimited yoga classes", "Personalized meditation", "Nutrition guidance", "Priority support"], popular: true, published: true, stripePriceId: "" },
@@ -160,6 +161,7 @@ function initStore() {
     testimonialsNextId: number;
     memberships: StoredMembership[];
     membershipsNextId: number;
+    orders: Record<string, unknown>[];
   };
 }
 

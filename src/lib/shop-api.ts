@@ -109,10 +109,7 @@ function getDemoWishlist() {
 }
 
 function simulateNetwork<T>(data: T): Promise<T> {
-  return delay(500).then(() => {
-    if (Math.random() < 0.05) throw new Error("Simulated server error");
-    return data;
-  });
+  return delay(500).then(() => data);
 }
 
 export const shopApi = {

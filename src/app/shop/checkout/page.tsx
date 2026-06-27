@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, ShoppingBag, CreditCard } from "lucide-react";
+import { ChevronRight, ShoppingBag, CreditCard, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { shopApi } from "@/lib/shop-api";
@@ -36,10 +36,10 @@ function validate(form: FormState): FormErrors {
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = "Invalid email format";
   if (!form.phone.trim()) errors.phone = "Mobile number is required";
   else if (!/^[\d\s\-+()]{7,20}$/.test(form.phone)) errors.phone = "Invalid phone number";
-  if (!form.country.trim()) errors.country = "Country is required";
-  if (!form.state.trim()) errors.state = "State is required";
-  if (!form.city.trim()) errors.city = "City is required";
   if (!form.address.trim()) errors.address = "Shipping address is required";
+  if (!form.city.trim()) errors.city = "City is required";
+  if (!form.state.trim()) errors.state = "State is required";
+  if (!form.country.trim()) errors.country = "Country is required";
   if (!form.pincode.trim()) errors.pincode = "Postal code is required";
   return errors;
 }
@@ -63,7 +63,9 @@ function CheckoutContent() {
       return;
     }
     shopApi.getProduct(productId).then((res) => {
-      setProduct(res.product || null);
+      const p = res.product;
+      if (!p) { router.replace("/shop"); return; }
+      setProduct(p);
       setLoading(false);
     }).catch(() => {
       router.replace("/shop");
@@ -123,7 +125,7 @@ function CheckoutContent() {
         customer: form,
       });
 
-      if (!orderRes.success && !orderRes.razorpay_order_id) {
+      if (!orderRes.success) {
         setGeneralError("Failed to create order. Please try again.");
         setSubmitting(false);
         return;
@@ -131,10 +133,11 @@ function CheckoutContent() {
 
       const order = orderRes.order;
       const razorpayOrderId = orderRes.razorpay_order_id;
+      const totalAmount = product.price * quantity;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_xxxxxxxxxxxx",
-        amount: orderRes.amount || product.price * quantity * 100,
+        amount: orderRes.amount || totalAmount * 100,
         currency: orderRes.currency || "INR",
         name: "MYSTIC YOGA",
         description: `Order ${order?.orderId || ""}`,
@@ -148,16 +151,24 @@ function CheckoutContent() {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             });
-            router.push(`/shop/order-success?orderId=${encodeURIComponent(order?.orderId || response.razorpay_order_id)}&method=razorpay`);
+            router.push(`/shop/order-success?orderId=${encodeURIComponent(order?.orderId || response.razorpay_order_id)}`);
           } catch {
-            setGeneralError("Payment verification failed. Please contact support.");
-            setSubmitting(false);
+            router.push(`/shop/order-failure?reason=verification_failed`);
           }
         },
-        modal: { ondismiss: () => setSubmitting(false) },
+        modal: {
+          ondismiss: () => {
+            router.push(`/shop/order-failure?reason=cancelled`);
+          },
+        },
       };
 
       const rzp = new (window as any).Razorpay(options);
+
+      rzp.on("payment.failed", function () {
+        router.push(`/shop/order-failure?reason=failed`);
+      });
+
       rzp.open();
     } catch {
       setGeneralError("Something went wrong. Please try again.");
@@ -189,11 +200,11 @@ function CheckoutContent() {
   const fields: { label: string; key: keyof FormState; type: string; placeholder: string; colSpan?: string }[] = [
     { label: "Full Name *", key: "name", type: "text", placeholder: "John Doe" },
     { label: "Email Address *", key: "email", type: "email", placeholder: "john@example.com" },
-    { label: "Mobile Number *", key: "phone", type: "tel", placeholder: "+1 234 567 8900" },
+    { label: "Phone Number *", key: "phone", type: "tel", placeholder: "+1 234 567 8900" },
     { label: "Country *", key: "country", type: "text", placeholder: "United States" },
     { label: "State *", key: "state", type: "text", placeholder: "California" },
     { label: "City *", key: "city", type: "text", placeholder: "Los Angeles" },
-    { label: "Complete Shipping Address *", key: "address", type: "text", placeholder: "123 Wellness Street, Apt 4B", colSpan: "sm:col-span-2" },
+    { label: "Shipping Address *", key: "address", type: "text", placeholder: "123 Wellness Street, Apt 4B", colSpan: "sm:col-span-2" },
     { label: "Postal Code *", key: "pincode", type: "text", placeholder: "90001" },
   ];
 
@@ -290,7 +301,10 @@ function CheckoutContent() {
                     className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-wine to-purple text-white font-medium text-sm shadow-lg shadow-wine/20 hover:shadow-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     {submitting ? (
-                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Processing...
+                      </>
                     ) : (
                       <>
                         <ShoppingBag className="w-4 h-4" />
@@ -300,12 +314,12 @@ function CheckoutContent() {
                   </button>
                 </MagneticButton>
 
-              <p className="text-[10px] text-wine/30 text-center mt-4">Secure checkout powered by Razorpay</p>
-            </motion.div>
+                <p className="text-[10px] text-wine/30 text-center mt-4">Secure checkout powered by Razorpay</p>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
     </main>
   );
 }

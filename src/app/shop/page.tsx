@@ -6,7 +6,6 @@ import { Search, ShoppingBag, Filter } from "lucide-react";
 import Link from "next/link";
 import SectionTitle from "@/components/SectionTitle";
 import ProductCard, { ProductCardSkeleton, type ShopProduct } from "@/components/shop/ProductCard";
-import MagneticButton from "@/components/animations/MagneticButton";
 import { shopApi } from "@/lib/shop-api";
 
 export default function ShopPage() {
@@ -29,17 +28,6 @@ export default function ShopPage() {
     const matchSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCategory && matchSearch;
   });
-
-  const featured = products.filter((p) => p.tags.includes("featured"));
-  const newArrivals = products.filter((p) => p.isNew);
-  const bestSellers = products.filter((p) => p.tags.includes("bestseller"));
-
-  const handleToggleWishlist = async (product: ShopProduct) => {
-    try {
-      await shopApi.toggleWishlist(product.id);
-      setProducts((prev) => prev.map((p) => (p.id === product.id ? { ...p, inWishlist: !p.inWishlist } : p)));
-    } catch { /* ignore */ }
-  };
 
   return (
     <main className="min-h-screen">
@@ -122,53 +110,14 @@ export default function ShopPage() {
           </motion.div>
         </section>
       ) : (
-        <>
-          {featured.length > 0 && (
-            <section className="max-w-7xl mx-auto px-4 pb-12">
-              <SectionTitle title="Featured Products" align="left" />
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {featured.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i}  />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {newArrivals.length > 0 && (
-            <section className="bg-gradient-to-r from-rose-light/50 to-lavender-light/50 py-12">
-              <div className="max-w-7xl mx-auto px-4">
-                <SectionTitle title="New Arrivals" subtitle="Fresh additions to elevate your practice" align="left" />
-                <div className="flex gap-4 md:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none -mx-4 px-4">
-                  {newArrivals.map((product, i) => (
-                    <div key={product.id} className="min-w-[260px] sm:min-w-[280px] snap-start">
-                      <ProductCard product={product} index={i}  />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
-          {bestSellers.length > 0 && (
-            <section className="max-w-7xl mx-auto px-4 pb-20 pt-12">
-              <SectionTitle title="Best Sellers" subtitle="Most loved by our community" align="left" />
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {bestSellers.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i}  />
-                ))}
-              </div>
-            </section>
-          )}
-
-          <section className="max-w-7xl mx-auto px-4 pb-20">
-            <SectionTitle title="All Products" align="left" />
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {filtered.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i}  />
-              ))}
-            </div>
-          </section>
-        </>
+        <section className="max-w-7xl mx-auto px-4 pb-20">
+          <SectionTitle title="All Products" align="left" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {filtered.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
+          </div>
+        </section>
       )}
 
       <section className="gradient-primary py-16">
@@ -180,11 +129,9 @@ export default function ShopPage() {
             Subscribe for exclusive offers, new product launches, and wellness tips delivered to your inbox.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-            <MagneticButton>
-              <Link href="/shop/register" className="inline-block px-8 py-3 rounded-full bg-gold text-wine font-semibold text-sm tracking-wide hover:shadow-lg hover:shadow-gold/30 transition-all">
-                Create Account
-              </Link>
-            </MagneticButton>
+            <Link href="/shop/register" className="inline-block px-8 py-3 rounded-full bg-gold text-wine font-semibold text-sm tracking-wide hover:shadow-lg hover:shadow-gold/30 transition-all">
+              Create Account
+            </Link>
           </motion.div>
         </div>
       </section>
