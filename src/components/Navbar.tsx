@@ -14,6 +14,14 @@ const navLinks = [
   { label: "Philosophy", href: "/philosophy" },
   { label: "Services", href: "/services" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Shop", href: "/shop" },
+  { label: "Quantum Cure", href: "/quantum-cure" },
+  { label: "Quantum Health", href: "/quantum-health" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "Blog", href: "/blog" },
+  { label: "Training", href: "/training" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -58,29 +66,29 @@ export default function Navbar() {
         style={{ backdropFilter: "blur(16px)" }}
       >
         <div className="h-full border-b border-[rgba(212,175,55,0.15)]">
-          <div className="h-full max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-10">
+          <div className="h-full max-w-full 2xl:max-w-[1600px] mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8">
             {/* Left: Logo */}
             <a
               href="/"
               onClick={(e) => { e.preventDefault(); router.push("/"); }}
               className="flex items-center shrink-0"
-              style={{ paddingLeft: "12px" }}
+              style={{ paddingLeft: "8px" }}
             >
               <img
                 src="/images/logo.png"
                 alt="Mystic Yoga"
-                className="h-11 md:h-[52px] lg:h-[60px] w-auto object-contain"
+                className="h-11 md:h-[52px] lg:h-[58px] w-auto object-contain"
               />
             </a>
 
-            {/* Center: Nav Links (hidden on mobile) */}
-            <nav className="hidden lg:flex items-center gap-6 xl:gap-7">
+            {/* Center: Nav Links */}
+            <nav className="hidden xl:flex items-center justify-center flex-1 gap-1 xl:gap-2 2xl:gap-3 px-2 overflow-hidden">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="relative text-sm font-medium text-white/70 hover:text-[#D4AF37] transition-colors duration-300 group whitespace-nowrap"
+                  className="relative text-sm font-medium text-white/70 hover:text-[#D4AF37] transition-colors duration-300 group whitespace-nowrap px-1.5 xl:px-2 py-1"
                 >
                   {link.label}
                   <span className="absolute -bottom-0.5 left-0 w-0 h-[1.5px] bg-[#D4AF37] rounded-full transition-all duration-300 group-hover:w-full" />
@@ -92,11 +100,11 @@ export default function Navbar() {
             </nav>
 
             {/* Right: Book Button (desktop) */}
-            <div className="hidden lg:block">
+            <div className="hidden xl:block shrink-0">
               <a
                 href="/book"
                 onClick={(e) => { e.preventDefault(); router.push("/book"); }}
-                className="inline-flex items-center px-5 xl:px-6 py-2.5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold tracking-wider transition-all duration-300 hover:bg-[#D4AF37] hover:text-[#0A0A0A] hover:shadow-lg hover:shadow-[rgba(212,175,55,0.25)]"
+                className="inline-flex items-center px-5 py-2.5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold tracking-wider transition-all duration-300 hover:bg-[#D4AF37] hover:text-[#0A0A0A] hover:shadow-lg hover:shadow-[rgba(212,175,55,0.25)]"
               >
                 Book Consultation
               </a>
@@ -105,7 +113,7 @@ export default function Navbar() {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden p-2 text-[#D4AF37] hover:text-white transition-colors"
+              className="xl:hidden p-2 text-[#D4AF37] hover:text-white transition-colors"
               aria-label="Open menu"
             >
               <Menu size={24} />
@@ -155,7 +163,7 @@ export default function Navbar() {
                     onClick={(e) => handleNavClick(e, link.href)}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
+                    transition={{ delay: i * 0.03 }}
                     className="flex items-center gap-2 px-4 py-3 text-base font-medium text-white/70 hover:text-[#D4AF37] hover:bg-white/5 rounded-lg transition-all"
                   >
                     {link.label}
@@ -167,7 +175,7 @@ export default function Navbar() {
                   onClick={(e) => { e.preventDefault(); setMobileOpen(false); router.push("/book"); }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
+                  transition={{ delay: 0.35 }}
                   className="block mt-6 px-6 py-3 rounded-full border border-[#D4AF37] text-[#D4AF37] text-center text-sm font-semibold transition-all hover:bg-[#D4AF37] hover:text-[#0A0A0A]"
                 >
                   Book Consultation
