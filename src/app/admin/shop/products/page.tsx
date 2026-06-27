@@ -25,7 +25,7 @@ interface Product {
   createdAt: string;
 }
 
-const categories = ['Yoga Mats', 'Yoga Blocks', 'Meditation Accessories', 'Apparel', 'Wellness Products', 'Ayurvedic Products', 'Accessories'];
+const categories = ['Wellness Products'];
 
 const empty: Partial<Product> = {
   name: '',
@@ -43,12 +43,6 @@ const empty: Partial<Product> = {
 };
 
 const seedProducts: Product[] = [
-  { id: generateId(), name: 'Premium Yoga Mat', description: 'High-quality non-slip yoga mat with perfect cushioning for all yoga styles.', category: 'Yoga Mats', price: 2499, comparePrice: 2999, stock: 25, image: 'https://placehold.co/100x100/ivory/wine?text=Mat', featured: true, bestSeller: false, newArrival: false, tags: ['non-slip', 'eco-friendly'], active: true, createdAt: new Date().toISOString() },
-  { id: generateId(), name: 'Cork Yoga Blocks Set', description: 'Natural cork blocks for enhanced stability and alignment during practice.', category: 'Yoga Blocks', price: 999, comparePrice: null, stock: 40, image: 'https://placehold.co/100x100/ivory/wine?text=Blocks', featured: false, bestSeller: true, newArrival: false, tags: ['cork', 'alignment'], active: true, createdAt: new Date().toISOString() },
-  { id: generateId(), name: 'Meditation Cushion', description: 'Comfortable meditation cushion filled with buckwheat hulls for support.', category: 'Meditation Accessories', price: 1799, comparePrice: 2199, stock: 15, image: 'https://placehold.co/100x100/ivory/wine?text=Cushion', featured: false, bestSeller: false, newArrival: true, tags: ['meditation', 'comfort'], active: true, createdAt: new Date().toISOString() },
-  { id: generateId(), name: 'Yoga Strap', description: 'Durable cotton yoga strap for deepening stretches and improving flexibility.', category: 'Yoga Blocks', price: 499, comparePrice: null, stock: 50, image: 'https://placehold.co/100x100/ivory/wine?text=Strap', featured: false, bestSeller: true, newArrival: false, tags: ['stretch', 'flexibility'], active: true, createdAt: new Date().toISOString() },
-  { id: generateId(), name: 'Bamboo Yoga Mat', description: 'Eco-friendly bamboo fiber yoga mat with natural anti-bacterial properties.', category: 'Yoga Mats', price: 3299, comparePrice: 3999, stock: 10, image: 'https://placehold.co/100x100/ivory/wine?text=Bamboo', featured: true, bestSeller: false, newArrival: true, tags: ['bamboo', 'eco-friendly', 'anti-bacterial'], active: true, createdAt: new Date().toISOString() },
-  { id: generateId(), name: 'Organic Cotton Yoga Set', description: 'Complete yoga outfit made from organic cotton for maximum comfort.', category: 'Apparel', price: 1999, comparePrice: null, stock: 20, image: 'https://placehold.co/100x100/ivory/wine?text=Set', featured: false, bestSeller: true, newArrival: false, tags: ['organic', 'cotton', 'comfortable'], active: true, createdAt: new Date().toISOString() },
   { id: generateId(), name: 'Quantum Cure™', description: 'Premium concentrated black water crafted for individuals who seek elevated living, vitality, and sophistication.', category: 'Wellness Products', price: 39900, comparePrice: 49900, stock: 100, image: '/images/product1.png', featured: true, bestSeller: false, newArrival: true, tags: ['premium', 'black-water', 'wellness'], active: true, createdAt: new Date().toISOString() },
 ];
 
