@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { MapPin, Phone, Mail, Send } from "lucide-react";
 import { FaInstagram, FaFacebook, FaYoutube, FaLinkedinIn } from "react-icons/fa";
 import { siteConfig } from "@/lib/data";
@@ -66,9 +67,13 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="font-serif text-xl font-bold text-white mb-4">
-              MYSTIC YOGA<small className="text-[0.45em] align-super">™</small>
-            </h3>
+            <Image
+              src="/images/logo.png"
+              alt="MYSTIC YOGA"
+              width={160}
+              height={45}
+              className="h-10 w-auto object-contain brightness-0 invert mb-4"
+            />
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               {siteConfig.tagline}
             </p>

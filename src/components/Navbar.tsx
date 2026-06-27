@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -84,9 +85,14 @@ export default function Navbar() {
               }}
               className="flex items-center gap-2"
             >
-              <span className="font-serif text-xl md:text-2xl font-bold tracking-tight text-gradient-wine-purple">
-                MYSTIC YOGA<small className="text-[0.45em] align-super">™</small>
-              </span>
+              <Image
+                src="/images/logo.png"
+                alt="MYSTIC YOGA"
+                width={140}
+                height={40}
+                className="h-8 md:h-10 w-auto object-contain"
+                priority
+              />
             </a>
 
             <div className="hidden lg:flex items-center gap-1">
@@ -139,9 +145,13 @@ export default function Navbar() {
               className="fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] bg-wine/95 backdrop-blur-xl border-l border-white/10 shadow-2xl"
             >
               <div className="flex items-center justify-between p-4 border-b border-white/10">
-                <span className="font-serif text-lg font-bold text-white">
-                  MYSTIC YOGA<small className="text-[0.45em] align-super">™</small>
-                </span>
+                <Image
+                  src="/images/logo.png"
+                  alt="MYSTIC YOGA"
+                  width={120}
+                  height={34}
+                  className="h-8 w-auto object-contain brightness-0 invert"
+                />
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="p-2 text-white/70 hover:text-white transition-colors"

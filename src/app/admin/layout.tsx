@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import NextImage from 'next/image';
 import Link from 'next/link';
 import {
   LayoutDashboard,
@@ -84,10 +85,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         }`}
       >
         <div className="flex items-center justify-between px-6 py-6 border-b border-white/10">
-          <Link href="/admin/dashboard" className="text-white font-serif text-lg tracking-wider">
-            MYSTIC YOGA<sup className="text-gold text-xs">™</sup>
-            <span className="block text-xs text-gold font-sans tracking-widest uppercase">
-              Admin
+          <Link href="/admin/dashboard">
+            <NextImage
+              src="/images/logo.png"
+              alt="MYSTIC YOGA"
+              width={140}
+              height={40}
+              className="h-8 w-auto object-contain brightness-0 invert"
+            />
+            <span className="block text-[10px] text-gold font-sans tracking-widest uppercase mt-0.5">
+              Admin Panel
             </span>
           </Link>
           <button

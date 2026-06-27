@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export default function LoadingScreen() {
   const [loading, setLoading] = useState(true);
@@ -21,14 +22,20 @@ export default function LoadingScreen() {
           className="fixed inset-0 z-[100] flex items-center justify-center gradient-primary"
         >
           <div className="text-center">
-            <motion.h1
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="font-serif text-3xl md:text-4xl text-white font-bold tracking-wide"
             >
-              MYSTIC YOGA<small className="text-[0.4em] align-super">™</small>
-            </motion.h1>
+              <Image
+                src="/images/logo.png"
+                alt="MYSTIC YOGA"
+                width={200}
+                height={56}
+                className="h-12 md:h-14 w-auto object-contain brightness-0 invert mx-auto"
+                priority
+              />
+            </motion.div>
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: 60 }}
