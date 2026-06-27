@@ -25,7 +25,8 @@ export default function AdminLogin() {
 
   const setSessionCookie = () => {
     const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
-    document.cookie = `admin_session=${expiresAt};path=/;max-age=86400;SameSite=Lax;Secure`;
+    const secure = window.location.protocol === "https:" ? ";Secure" : "";
+    document.cookie = `admin_session=${expiresAt};path=/;max-age=86400;SameSite=Lax${secure}`;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -37,7 +38,7 @@ export default function AdminLogin() {
       return;
     }
 
-    const validEmail = email === 'Mystic_Sunita' || email.toLowerCase() === 'admin@mysticyoga.global';
+    const validEmail = email.toLowerCase() === 'mystic_sunita' || email.toLowerCase() === 'admin@mysticyoga.global';
     if (validEmail && password === 'Sunita240901') {
       localStorage.setItem('admin_authenticated', 'true');
       setSessionCookie();
