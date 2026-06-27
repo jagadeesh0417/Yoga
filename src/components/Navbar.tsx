@@ -90,7 +90,7 @@ export default function Navbar() {
                 alt="MYSTIC YOGA"
                 width={140}
                 height={40}
-                className="h-8 md:h-10 w-auto object-contain"
+                className="h-8 md:h-10 w-auto object-contain brightness-0 invert"
                 priority
               />
             </a>
