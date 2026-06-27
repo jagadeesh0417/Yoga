@@ -8,21 +8,21 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
 const navLinks = [
-  { label: "Home", href: "/", section: false },
-  { label: "About", href: "/about", section: false },
-  { label: "Why Us", href: "/why-us", section: false },
-  { label: "Benefits", href: "/benefits", section: false },
-  { label: "Philosophy", href: "/philosophy", section: false },
-  { label: "Services", href: "/services", section: false },
-  { label: "Pricing", href: "/pricing", section: false },
-  { label: "Shop", href: "/shop", section: false },
-  { label: "Quantum Cure", href: "/quantum-cure", section: false },
-  { label: "Quantum Health", href: "/quantum-health", section: false },
-  { label: "Gallery", href: "/gallery", section: false },
-  { label: "Testimonials", href: "/testimonials", section: false },
-  { label: "Blog", href: "/blog", section: false },
-  { label: "Training", href: "/training", section: false },
-  { label: "Contact", href: "/contact", section: false },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Why Us", href: "/why-us" },
+  { label: "Benefits", href: "/benefits" },
+  { label: "Philosophy", href: "/philosophy" },
+  { label: "Services", href: "/services" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Shop", href: "/shop" },
+  { label: "Quantum Cure", href: "/quantum-cure" },
+  { label: "Quantum Health", href: "/quantum-health" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "Blog", href: "/blog" },
+  { label: "Training", href: "/training" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -42,90 +42,108 @@ export default function Navbar() {
     } else {
       document.body.style.overflow = "";
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    link: (typeof navLinks)[0]
+    href: string
   ) => {
     e.preventDefault();
     setMobileOpen(false);
-
-    if (link.section) {
-      const id = link.href.replace("#", "");
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    } else {
-      router.push(link.href);
-    }
+    router.push(href);
   };
 
   return (
     <>
-      <nav
+      <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          "h-[72px] md:h-[88px]",
           scrolled
-            ? "bg-wine/95 backdrop-blur-xl shadow-lg shadow-black/10"
-            : "bg-transparent"
+            ? "bg-[rgba(25,16,35,0.98)] shadow-lg"
+            : "bg-[rgba(25,16,35,0.95)]"
         )}
+        style={{ backdropFilter: "blur(16px)" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="h-full border-b border-[rgba(212,175,55,0.15)]">
+          <div className="h-full max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8">
+            {/* Left: Logo + Brand */}
             <a
               href="/"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push("/");
-              }}
-              className="flex items-center gap-2"
+              onClick={(e) => { e.preventDefault(); router.push("/"); }}
+              className="flex items-center gap-3 group"
+              style={{ marginLeft: "24px" }}
             >
               <Image
                 src="/images/logo.png"
                 alt="MYSTIC YOGA"
-                width={140}
-                height={40}
-                className="h-8 md:h-10 w-auto object-contain brightness-0 invert"
+                width={55}
+                height={55}
+                className={cn(
+                  "w-auto object-contain transition-all duration-500",
+                  scrolled ? "h-[45px]" : "h-10 md:h-[55px]"
+                )}
                 priority
               />
+              <div className="flex flex-col leading-none">
+                <span
+                  className="font-serif text-sm md:text-lg font-bold tracking-[4px] text-[#D4AF37]"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  MYSTIC
+                </span>
+                <span
+                  className="font-serif text-sm md:text-lg font-bold tracking-[4px] text-[#D4AF37]"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  YOGA
+                </span>
+              </div>
             </a>
 
-            <div className="hidden lg:flex items-center gap-1">
+            {/* Center: Nav Links */}
+            <nav className="hidden lg:flex items-center gap-7">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={(e) => handleNavClick(e, link)}
-                  className="relative px-3 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors duration-200 group"
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="relative text-sm font-medium text-white/70 hover:text-[#D4AF37] transition-colors duration-300 group whitespace-nowrap"
                 >
                   {link.label}
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gold rounded-full transition-all duration-300 group-hover:w-4/5" />
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-[1.5px] bg-[#D4AF37] rounded-full transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ boxShadow: "0 0 12px rgba(212,175,55,0.15)" }}
+                  />
                 </a>
               ))}
+            </nav>
+
+            {/* Right: Book Button */}
+            <div className="hidden lg:block">
               <a
                 href="/book"
-                className="ml-4 px-6 py-2.5 rounded-full bg-gradient-to-r from-wine to-purple text-white text-sm font-semibold transition-all duration-300 shadow-lg shadow-wine/20 hover:shadow-wine/30 hover:-translate-y-0.5"
+                onClick={(e) => { e.preventDefault(); router.push("/book"); }}
+                className="inline-flex items-center px-6 py-2.5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold tracking-wider transition-all duration-300 hover:bg-[#D4AF37] hover:text-[#0A0A0A] hover:shadow-lg hover:shadow-[rgba(212,175,55,0.25)]"
               >
-                Book Now
+                Book Consultation
               </a>
             </div>
 
+            {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden p-2 text-white hover:text-gold transition-colors"
+              className="lg:hidden p-2 text-[#D4AF37] hover:text-white transition-colors"
               aria-label="Open menu"
             >
               <Menu size={24} />
             </button>
           </div>
         </div>
-      </nav>
+      </header>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -142,34 +160,40 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] bg-wine/95 backdrop-blur-xl border-l border-white/10 shadow-2xl"
+              className="fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] bg-[rgba(25,16,35,0.98)] backdrop-blur-xl border-l border-[rgba(212,175,55,0.15)] shadow-2xl"
             >
-              <div className="flex items-center justify-between p-4 border-b border-white/10">
-                <Image
-                  src="/images/logo.png"
-                  alt="MYSTIC YOGA"
-                  width={120}
-                  height={34}
-                  className="h-8 w-auto object-contain brightness-0 invert"
-                />
+              <div className="flex items-center justify-between p-4 border-b border-[rgba(212,175,55,0.15)]">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/images/logo.png"
+                    alt="MYSTIC YOGA"
+                    width={36}
+                    height={36}
+                    className="h-9 w-auto object-contain"
+                  />
+                  <div className="flex flex-col leading-none">
+                    <span className="font-serif text-xs font-bold tracking-[4px] text-[#D4AF37]">MYSTIC</span>
+                    <span className="font-serif text-xs font-bold tracking-[4px] text-[#D4AF37]">YOGA</span>
+                  </div>
+                </div>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="p-2 text-white/70 hover:text-white transition-colors"
+                  className="p-2 text-[#D4AF37]/70 hover:text-[#D4AF37] transition-colors"
                   aria-label="Close menu"
                 >
                   <X size={22} />
                 </button>
               </div>
-              <div className="p-4 space-y-1">
+              <div className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-80px)]">
                 {navLinks.map((link, i) => (
                   <motion.a
                     key={link.label}
                     href={link.href}
-                    onClick={(e) => handleNavClick(e, link)}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex items-center gap-2 px-4 py-3 text-base font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                    className="flex items-center gap-2 px-4 py-3 text-base font-medium text-white/70 hover:text-[#D4AF37] hover:bg-white/5 rounded-lg transition-all"
                   >
                     {link.label}
                     <ChevronDown size={14} className="ml-auto -rotate-90 opacity-50" />
@@ -177,12 +201,13 @@ export default function Navbar() {
                 ))}
                 <motion.a
                   href="/book"
+                  onClick={(e) => { e.preventDefault(); setMobileOpen(false); router.push("/book"); }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="block mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-wine to-purple text-white text-center text-sm font-semibold transition-all shadow-lg"
+                  className="block mt-6 px-6 py-3 rounded-full border border-[#D4AF37] text-[#D4AF37] text-center text-sm font-semibold transition-all hover:bg-[#D4AF37] hover:text-[#0A0A0A]"
                 >
-                  Book Now
+                  Book Consultation
                 </motion.a>
               </div>
             </motion.div>
