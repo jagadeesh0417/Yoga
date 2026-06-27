@@ -59,6 +59,51 @@ export interface StoredBooking {
   createdAt: string;
 }
 
+export interface StoredBlog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  tags: string[];
+  published: boolean;
+  featured: boolean;
+  readTime: string;
+  createdAt: string;
+}
+
+export interface StoredGalleryItem {
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  featured: boolean;
+  order: number;
+}
+
+export interface StoredTestimonial {
+  id: string;
+  name: string;
+  location: string;
+  rating: number;
+  text: string;
+  image: string;
+  featured: boolean;
+  createdAt: string;
+}
+
+export interface StoredMembership {
+  id: string;
+  name: string;
+  price: number;
+  interval: string;
+  features: string[];
+  popular: boolean;
+  published: boolean;
+  stripePriceId: string;
+}
+
 function initStore() {
   if (!g.__store) {
     g.__store = {
@@ -79,6 +124,21 @@ function initStore() {
       contactsNextId: 1,
       bookings: [] as StoredBooking[],
       bookingsNextId: 1,
+      blogs: [] as StoredBlog[],
+      blogsNextId: 1,
+      gallery: [] as StoredGalleryItem[],
+      galleryNextId: 1,
+      testimonials: [
+        { id: "1", name: "Priya Sharma", location: "Mumbai, India", rating: 5, text: "MYSTIC YOGA transformed my life. Sunita's guidance helped me find balance and inner peace I never knew existed.", image: "", featured: true, createdAt: new Date().toISOString() },
+        { id: "2", name: "Arun Mehta", location: "Delhi, India", rating: 5, text: "The corporate wellness program was incredible. Our team's productivity and morale improved significantly.", image: "", featured: true, createdAt: new Date().toISOString() },
+      ] as StoredTestimonial[],
+      testimonialsNextId: 3,
+      memberships: [
+        { id: "1", name: "Starter", price: 29, interval: "month", features: ["Weekly yoga classes", "Basic meditation guides", "Community access"], popular: false, published: true, stripePriceId: "" },
+        { id: "2", name: "Wellness", price: 59, interval: "month", features: ["Unlimited yoga classes", "Personalized meditation", "Nutrition guidance", "Priority support"], popular: true, published: true, stripePriceId: "" },
+        { id: "3", name: "Premium", price: 99, interval: "month", features: ["Everything in Wellness", "1-on-1 coaching", "Retreat discounts", "VIP community", "Exclusive workshops"], popular: false, published: true, stripePriceId: "" },
+      ] as StoredMembership[],
+      membershipsNextId: 4,
     };
   }
   return g.__store as {
@@ -92,6 +152,14 @@ function initStore() {
     contactsNextId: number;
     bookings: StoredBooking[];
     bookingsNextId: number;
+    blogs: StoredBlog[];
+    blogsNextId: number;
+    gallery: StoredGalleryItem[];
+    galleryNextId: number;
+    testimonials: StoredTestimonial[];
+    testimonialsNextId: number;
+    memberships: StoredMembership[];
+    membershipsNextId: number;
   };
 }
 

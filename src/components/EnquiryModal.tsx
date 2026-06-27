@@ -2,6 +2,7 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { X, Send, Phone, Mail, User, Clock, MessageSquare } from "lucide-react";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
@@ -16,6 +17,7 @@ const services = [
 const STORAGE_KEY = "mystic-enquiry-dismissed";
 
 export default function EnquiryModal() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -31,6 +33,7 @@ export default function EnquiryModal() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (pathname.startsWith("/admin")) return;
 
     const timer = setTimeout(() => {
       const dismissed = localStorage.getItem(STORAGE_KEY);
@@ -47,7 +50,7 @@ export default function EnquiryModal() {
       clearTimeout(timer);
       window.removeEventListener("trigger-enquiry", onTrigger);
     };
-  }, []);
+  }, [pathname]);
 
   const close = () => {
     setOpen(false);

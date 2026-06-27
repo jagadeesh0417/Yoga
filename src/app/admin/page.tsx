@@ -32,6 +32,8 @@ export default function AdminLogin() {
     setTimeout(() => {
       if (username === 'Mystic_Sunita' && password === 'Sunita240901') {
         localStorage.setItem('admin_authenticated', 'true');
+        const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+        document.cookie = `admin_session=${expiresAt};path=/;max-age=86400;SameSite=Lax`;
         router.replace('/admin/dashboard');
       } else {
         setError('Invalid credentials. Please try again.');
