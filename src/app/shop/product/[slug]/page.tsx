@@ -38,7 +38,7 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     if (!product) return;
-    router.push(`/shop/checkout?productId=${product.id}&quantity=${quantity}`);
+    router.push(`/checkout?product=${product.id}&quantity=${quantity}`);
   };
 
   if (loading) {

@@ -1,27 +1,16 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { Suspense } from "react";
 import { motion } from "framer-motion";
 import { XCircle, ShoppingBag, ArrowRight, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import MagneticButton from "@/components/animations/MagneticButton";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
 function OrderFailureContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const reason = searchParams.get("reason");
-
-  useEffect(() => {
-    if (!searchParams.has("reason")) {
-      const timer = setTimeout(() => {
-        if (!searchParams.has("reason")) {
-        }
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [searchParams, router]);
 
   return (
     <main className="min-h-screen flex items-center justify-center">

@@ -130,12 +130,12 @@ export const shopApi = {
     }
   },
 
-  getProduct: async (slug: string) => {
+  getProduct: async (idOrSlug: string) => {
     try {
-      const res = await fetchApi(`/products/${slug}`);
+      const res = await fetchApi(`/products/${idOrSlug}`);
       return res;
     } catch {
-      const product = DEMO_PRODUCTS.find((p) => p.slug === slug);
+      const product = DEMO_PRODUCTS.find((p) => p.slug === idOrSlug || p.id === idOrSlug);
       if (!product) throw new Error("Product not found");
       const related = DEMO_PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
       return simulateNetwork({ product, related });

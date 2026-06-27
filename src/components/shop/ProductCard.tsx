@@ -107,7 +107,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
           {inStock ? (
             <Link
-              href={`/shop/checkout?productId=${product.id}&quantity=1`}
+              href={`/checkout?product=${product.id}&quantity=1`}
               className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-wine to-purple text-white text-sm font-medium shadow-lg shadow-wine/20 hover:shadow-xl hover:brightness-110 transition-all"
             >
               <ShoppingBag className="w-4 h-4" />
