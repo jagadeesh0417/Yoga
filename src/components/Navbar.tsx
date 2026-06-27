@@ -15,8 +15,7 @@ const navLinks = [
   { label: "Services", href: "/services" },
   { label: "Pricing", href: "/pricing" },
   { label: "Shop", href: "/shop" },
-  { label: "Quantum Cure", href: "/quantum-cure" },
-  { label: "Quantum Health", href: "/quantum-health" },
+
   { label: "Gallery", href: "/gallery" },
   { label: "Testimonials", href: "/testimonials" },
   { label: "Blog", href: "/blog" },
