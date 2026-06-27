@@ -52,13 +52,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const authed = localStorage.getItem('admin_authenticated') === 'true';
-    const hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('admin_session='));
-    if (!authed && !hasCookie && pathname !== '/admin') {
-      router.replace('/admin');
+    if (!authed && pathname !== '/admin') {
+      window.location.href = '/admin';
     } else {
       setChecked(true);
     }
-  }, [pathname, router]);
+  }, [pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem('admin_authenticated');

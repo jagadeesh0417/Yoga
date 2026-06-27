@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, LogIn, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, LogIn, Lock, Mail, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminLogin() {
@@ -12,40 +12,47 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const authed = localStorage.getItem('admin_authenticated') === 'true';
-    const hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('admin_session='));
-    if (authed || hasCookie) {
+    if (authed) {
       router.replace('/admin/dashboard');
     } else {
       setLoading(false);
     }
   }, [router]);
 
-  const setSessionCookie = () => {
-    const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
-    const secure = window.location.protocol === "https:" ? ";Secure" : "";
-    document.cookie = `admin_session=${expiresAt};path=/;max-age=86400;SameSite=Lax${secure}`;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!email || !password) {
+    const cleanEmail = email.trim();
+    const cleanPassword = password;
+
+    if (!cleanEmail || !cleanPassword) {
       setError('Please enter both email/username and password.');
       return;
     }
 
-    const validEmail = email.toLowerCase() === 'mystic_sunita' || email.toLowerCase() === 'admin@mysticyoga.global';
-    if (validEmail && password === 'Sunita240901') {
-      localStorage.setItem('admin_authenticated', 'true');
-      setSessionCookie();
-      setTimeout(() => router.replace('/admin/dashboard'), 100);
-    } else {
+    const validEmail = cleanEmail.toLowerCase() === 'mystic_sunita' || cleanEmail.toLowerCase() === 'admin@mysticyoga.global';
+    if (!validEmail || cleanPassword !== 'Sunita240901') {
       setError('Invalid credentials. Please try again.');
+      return;
     }
+
+    setSubmitting(true);
+
+    try {
+      const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+      const secure = window.location.protocol === 'https:' ? ';Secure' : '';
+      document.cookie = `admin_session=${expiresAt};path=/;max-age=86400;SameSite=Lax${secure}`;
+    } catch {
+      // cookie set failed, localStorage is the fallback
+    }
+
+    localStorage.setItem('admin_authenticated', 'true');
+    window.location.href = '/admin/dashboard';
   };
 
   if (loading) {
@@ -81,6 +88,7 @@ export default function AdminLogin() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-beige bg-ivory/50 text-wine placeholder:text-wine/30 focus:outline-none focus:ring-2 focus:ring-wine/30 focus:border-wine transition-colors"
                 placeholder="Enter email or username"
+                autoComplete="username"
               />
             </div>
           </div>
@@ -95,6 +103,7 @@ export default function AdminLogin() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-beige bg-ivory/50 text-wine placeholder:text-wine/30 focus:outline-none focus:ring-2 focus:ring-wine/30 focus:border-wine transition-colors"
                 placeholder="Enter password"
+                autoComplete="current-password"
               />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-wine/40 hover:text-wine/70">
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -104,10 +113,15 @@ export default function AdminLogin() {
 
           <button
             type="submit"
+            disabled={submitting}
             className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-wine to-purple text-white font-medium hover:brightness-110 transition-all disabled:opacity-60"
           >
-            <LogIn size={18} />
-            <span>Sign In</span>
+            {submitting ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <LogIn size={18} />
+            )}
+            <span>{submitting ? 'Signing In...' : 'Sign In'}</span>
           </button>
 
           <div className="text-center">
