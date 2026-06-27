@@ -82,6 +82,25 @@ const DEMO_PRODUCTS = [
     specifications: [{ label: "Fragrances", value: "6 varieties" }, { label: "Stick count", value: "120 sticks" }],
     isNew: true, createdAt: "2025-06-10",
   },
+  {
+    id: "9", name: "Quantum Cure™", slug: "quantum-cure",
+    description: "Premium concentrated black water crafted for individuals who seek elevated living, vitality, and sophistication.",
+    price: 399, compareAtPrice: 499, currency: "HKD",
+    images: ["/images/product1.png"],
+    category: "Wellness", rating: 5.0, reviewCount: 12,
+    stock: 100, tags: ["premium", "new"],
+    benefits: ["Premium Concentrated Formula", "Elegant Matte Black Packaging", "Convenient Dropper Application", "Luxury Wellness Experience", "Scientifically Inspired Design", "Compact 50ml Premium Bottle"],
+    specifications: [
+      { label: "Product Name", value: "Quantum Cure™" },
+      { label: "Category", value: "Premium Wellness" },
+      { label: "Volume", value: "50ml" },
+      { label: "Type", value: "Concentrated Black Water" },
+      { label: "Packaging", value: "Frosted Black Glass Bottle" },
+      { label: "Cap", value: "Gold Premium Dropper" },
+      { label: "Shelf Life", value: "24 Months" },
+    ],
+    isNew: true, createdAt: "2025-06-27",
+  },
 ];
 
 const DEMO_CATEGORIES = [
