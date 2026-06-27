@@ -6,8 +6,9 @@ export async function getPrisma() {
   if (!process.env.DATABASE_URL) return null;
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
   try {
-    const { PrismaClient } = await import("@/generated/prisma/client");
-    const client = new (PrismaClient as any)();
+    const mod = await import("@/generated/prisma/client");
+    const PrismaClient = (mod as any).PrismaClient;
+    const client = new PrismaClient();
     if (process.env.NODE_ENV !== "production") {
       globalForPrisma.prisma = client;
     }
