@@ -1,8 +1,6 @@
 ﻿'use client';
 
 import { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import AdminTable from '@/components/admin/AdminTable';
 import Modal from '@/components/admin/Modal';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
@@ -97,13 +95,8 @@ export default function AdminFAQ() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ivory to-beige/30">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <Link href="/admin/dashboard" className="inline-flex items-center gap-2 text-wine/60 hover:text-wine transition-colors text-sm mb-6">
-          <ArrowLeft size={16} /> Back to Dashboard
-        </Link>
-        <AdminTable columns={columns} data={items} onEdit={handleEdit} onDelete={(item) => setDeleteTarget(items.findIndex((f) => f.question === item.question))} onAdd={handleAdd} title="FAQs" addLabel="Add FAQ" />
-      </div>
+    <div className="space-y-6">
+      <AdminTable columns={columns} data={items} onEdit={handleEdit} onDelete={(item) => setDeleteTarget(items.findIndex((f) => f.question === item.question))} onAdd={handleAdd} title="FAQs" addLabel="Add FAQ" />
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingIndex !== null ? 'Edit FAQ' : 'Add FAQ'}>
         <form onSubmit={handleSubmit} className="space-y-4">

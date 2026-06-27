@@ -1,8 +1,6 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminTable from '@/components/admin/AdminTable';
 import Modal from '@/components/admin/Modal';
@@ -151,13 +149,8 @@ export default function AdminMemberships() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ivory to-beige/30">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <Link href="/admin/dashboard" className="inline-flex items-center gap-2 text-wine/60 hover:text-wine transition-colors text-sm mb-6">
-          <ArrowLeft size={16} /> Back to Dashboard
-        </Link>
-        <AdminTable columns={columns} data={items} onEdit={handleEdit} onDelete={(item) => setDeleteTarget(item)} onAdd={handleAdd} title="Membership Plans" addLabel="Add Plan" />
-      </div>
+    <div className="space-y-6">
+      <AdminTable columns={columns} data={items} onEdit={handleEdit} onDelete={(item) => setDeleteTarget(item)} onAdd={handleAdd} title="Membership Plans" addLabel="Add Plan" />
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem !== null ? 'Edit Membership Plan' : 'Add Membership Plan'}>
         <form onSubmit={handleSubmit} className="space-y-4">

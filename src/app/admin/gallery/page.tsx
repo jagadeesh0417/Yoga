@@ -1,8 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Pencil, Star, Image as ImageIcon } from 'lucide-react';
-import Link from 'next/link';
+import { Plus, Trash2, Pencil, Star, Image as ImageIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/admin/Modal';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
@@ -129,53 +128,50 @@ export default function AdminGallery() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ivory to-beige/30">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <Link href="/admin/dashboard" className="inline-flex items-center gap-2 text-wine/60 hover:text-wine transition-colors text-sm mb-6">
-          <ArrowLeft size={16} /> Back to Dashboard
-        </Link>
-
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-serif font-bold text-gradient-wine-purple">Gallery</h2>
-          <button onClick={handleAdd} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-wine to-purple text-white rounded-lg hover:bg-wine/90 transition-colors text-sm font-medium">
-            <Plus size={16} /> Add Image
-          </button>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-serif text-gradient-wine-purple">Gallery</h2>
+          <p className="text-wine/50 text-sm mt-1">Manage your gallery images</p>
         </div>
-
-        {items.length === 0 ? (
-          <div className="text-center py-16 border-2 border-dashed border-gold/30 rounded-2xl">
-            <ImageIcon size={48} className="mx-auto text-gold/40 mb-4" />
-            <p className="text-wine/50 text-sm">No gallery images yet. Click &ldquo;Add Image&rdquo; to upload.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {items.map((item, idx) => (
-              <div key={item.id} className="group relative rounded-xl overflow-hidden border border-white/10 bg-white/50 backdrop-blur-sm shadow-sm hover:shadow-lg transition-all">
-                {item.image ? (
-                  <div className="aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }} />
-                ) : (
-                  <div className={`aspect-[4/3] ${placeholderStyle(idx)} flex items-center justify-center`}>
-                    <ImageIcon size={32} className="text-gold/40" />
-                  </div>
-                )}
-                <div className="p-3">
-                  <p className="text-sm font-medium text-wine truncate">{item.title}</p>
-                  <p className="text-xs text-wine/50 mt-0.5">{item.category}</p>
-                </div>
-                {item.featured && <Star size={14} className="absolute top-2 right-2 fill-gold text-gold" />}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                  <button onClick={() => handleEdit(item)} className="p-2 rounded-full bg-white/90 text-wine hover:bg-white transition-colors">
-                    <Pencil size={16} />
-                  </button>
-                  <button onClick={() => setDeleteTarget(item)} className="p-2 rounded-full bg-white/90 text-red-500 hover:bg-white transition-colors">
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <button onClick={handleAdd} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-wine to-purple text-white rounded-lg hover:bg-wine/90 transition-colors text-sm font-medium">
+          <Plus size={16} /> Add Image
+        </button>
       </div>
+
+      {items.length === 0 ? (
+        <div className="text-center py-16 border-2 border-dashed border-gold/30 rounded-2xl">
+          <ImageIcon size={48} className="mx-auto text-gold/40 mb-4" />
+          <p className="text-wine/50 text-sm">No gallery images yet. Click &ldquo;Add Image&rdquo; to upload.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {items.map((item, idx) => (
+            <div key={item.id} className="group relative rounded-xl overflow-hidden border border-white/10 bg-white/50 backdrop-blur-sm shadow-sm hover:shadow-lg transition-all">
+              {item.image ? (
+                <div className="aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }} />
+              ) : (
+                <div className={`aspect-[4/3] ${placeholderStyle(idx)} flex items-center justify-center`}>
+                  <ImageIcon size={32} className="text-gold/40" />
+                </div>
+              )}
+              <div className="p-3">
+                <p className="text-sm font-medium text-wine truncate">{item.title}</p>
+                <p className="text-xs text-wine/50 mt-0.5">{item.category}</p>
+              </div>
+              {item.featured && <Star size={14} className="absolute top-2 right-2 fill-gold text-gold" />}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                <button onClick={() => handleEdit(item)} className="p-2 rounded-full bg-white/90 text-wine hover:bg-white transition-colors">
+                  <Pencil size={16} />
+                </button>
+                <button onClick={() => setDeleteTarget(item)} className="p-2 rounded-full bg-white/90 text-red-500 hover:bg-white transition-colors">
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem !== null ? 'Edit Gallery Image' : 'Add Gallery Image'}>
         <form onSubmit={handleSubmit} className="space-y-4">

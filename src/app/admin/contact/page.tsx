@@ -1,8 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
-import Link from 'next/link';
+import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Toast from '@/components/admin/Toast';
 import { siteConfig } from '@/lib/data';
@@ -80,16 +79,11 @@ export default function AdminContact() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ivory to-beige/30">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-        <Link href="/admin/dashboard" className="inline-flex items-center gap-2 text-wine/60 hover:text-wine transition-colors text-sm mb-6">
-          <ArrowLeft size={16} /> Back to Dashboard
-        </Link>
-
-        <div className="mb-6">
-          <h2 className="text-2xl font-serif font-bold text-gradient-wine-purple">Contact Information</h2>
-          <p className="text-sm text-wine/60 mt-1">Manage your business contact details and social media links</p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-serif text-gradient-wine-purple">Contact Information</h2>
+        <p className="text-sm text-wine/60 mt-1">Manage your business contact details and social media links</p>
+      </div>
 
         <form onSubmit={handleSave} className="space-y-6 mb-10">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-sm">
@@ -170,7 +164,6 @@ export default function AdminContact() {
               ))}
             </div>
           )}
-        </div>
       </div>
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
