@@ -72,34 +72,20 @@ export default function Navbar() {
             <a
               href="/"
               onClick={(e) => { e.preventDefault(); router.push("/"); }}
-              className="flex items-center gap-3 group"
+              className="flex items-center"
               style={{ marginLeft: "24px" }}
             >
               <Image
                 src="/images/logo.png"
                 alt="MYSTIC YOGA"
-                width={55}
-                height={55}
+                width={60}
+                height={60}
                 className={cn(
                   "w-auto object-contain transition-all duration-500",
-                  scrolled ? "h-[45px]" : "h-10 md:h-[55px]"
+                  scrolled ? "h-[50px]" : "h-12 md:h-[60px]"
                 )}
                 priority
               />
-              <div className="flex flex-col leading-none">
-                <span
-                  className="font-serif text-sm md:text-lg font-bold tracking-[4px] text-[#D4AF37]"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  MYSTIC
-                </span>
-                <span
-                  className="font-serif text-sm md:text-lg font-bold tracking-[4px] text-[#D4AF37]"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  YOGA
-                </span>
-              </div>
             </a>
 
             {/* Center: Nav Links */}
@@ -163,19 +149,13 @@ export default function Navbar() {
               className="fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] bg-[rgba(25,16,35,0.98)] backdrop-blur-xl border-l border-[rgba(212,175,55,0.15)] shadow-2xl"
             >
               <div className="flex items-center justify-between p-4 border-b border-[rgba(212,175,55,0.15)]">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/images/logo.png"
-                    alt="MYSTIC YOGA"
-                    width={36}
-                    height={36}
-                    className="h-9 w-auto object-contain"
-                  />
-                  <div className="flex flex-col leading-none">
-                    <span className="font-serif text-xs font-bold tracking-[4px] text-[#D4AF37]">MYSTIC</span>
-                    <span className="font-serif text-xs font-bold tracking-[4px] text-[#D4AF37]">YOGA</span>
-                  </div>
-                </div>
+                <Image
+                  src="/images/logo.png"
+                  alt="MYSTIC YOGA"
+                  width={48}
+                  height={48}
+                  className="h-12 w-auto object-contain"
+                />
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="p-2 text-[#D4AF37]/70 hover:text-[#D4AF37] transition-colors"
