@@ -81,7 +81,7 @@ export default function Navbar() {
                 width={60}
                 height={60}
                 className={cn(
-                  "w-auto object-contain transition-all duration-500",
+                  "w-auto object-contain brightness-0 invert transition-all duration-500",
                   scrolled ? "h-[50px]" : "h-12 md:h-[60px]"
                 )}
                 priority
@@ -154,7 +154,7 @@ export default function Navbar() {
                   alt="MYSTIC YOGA"
                   width={48}
                   height={48}
-                  className="h-12 w-auto object-contain"
+                  className="h-12 w-auto object-contain brightness-0 invert"
                 />
                 <button
                   onClick={() => setMobileOpen(false)}
