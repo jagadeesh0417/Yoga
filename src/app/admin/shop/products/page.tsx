@@ -44,6 +44,7 @@ const empty: Partial<Product> = {
 
 const seedProducts: Product[] = [
   { id: generateId(), name: 'Quantum Cure™', description: 'Premium concentrated black water crafted for individuals who seek elevated living, vitality, and sophistication.', category: 'Wellness Products', price: 39900, comparePrice: 49900, stock: 100, image: '/images/product1.png', featured: true, bestSeller: false, newArrival: true, tags: ['premium', 'black-water', 'wellness'], active: true, createdAt: new Date().toISOString() },
+  { id: generateId(), name: 'Quantum Health™', description: 'Premium wellness formula for individuals seeking balance, confidence, and radiant living. Purify, sculpt, and glow.', category: 'Wellness Products', price: 59900, comparePrice: null, stock: 100, image: '/images/product2.png', featured: true, bestSeller: false, newArrival: true, tags: ['premium', 'wellness', 'beauty'], active: true, createdAt: new Date().toISOString() },
 ];
 
 function loadProducts(): Product[] {

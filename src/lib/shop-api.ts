@@ -20,6 +20,25 @@ const DEMO_PRODUCTS = [
     ],
     isNew: true, createdAt: "2025-06-27",
   },
+  {
+    id: "10", name: "Quantum Health™", slug: "quantum-health",
+    description: "Premium wellness formula for individuals seeking balance, confidence, and radiant living. Purify, sculpt, and glow.",
+    price: 599, compareAtPrice: 0, currency: "HKD",
+    images: ["/images/product2.png"],
+    category: "Wellness", rating: 5.0, reviewCount: 8,
+    stock: 100, tags: ["premium", "new"],
+    benefits: ["Premium Quality Formula", "Supports Healthy Lifestyle Goals", "Natural Ingredient Inspired", "Beauty & Wellness Focused", "Elegant Luxury Packaging", "Daily Wellness Support", "Designed for Modern Living", "Advanced Wellness Experience"],
+    specifications: [
+      { label: "Product Name", value: "Quantum Health™" },
+      { label: "Tagline", value: "Purify • Sculpt • Glow" },
+      { label: "Category", value: "Premium Wellness" },
+      { label: "Packaging", value: "Luxury Matte Black Jar" },
+      { label: "Formula", value: "Advanced Wellness Blend" },
+      { label: "Quality", value: "Premium Grade" },
+      { label: "Price", value: "HKD 599" },
+    ],
+    isNew: true, createdAt: "2025-06-27",
+  },
 ];
 
 const DEMO_CATEGORIES = [
