@@ -51,8 +51,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const authenticated = localStorage.getItem('admin_authenticated') === 'true';
-    if (!authenticated && pathname !== '/admin') {
+    const authed = localStorage.getItem('admin_authenticated') === 'true';
+    const hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('admin_session='));
+    if (!authed && !hasCookie && pathname !== '/admin') {
       router.replace('/admin');
     } else {
       setChecked(true);

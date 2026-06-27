@@ -50,3 +50,5 @@ server/public/uploads
 shop/node_modules
 shop/dist
 shop/.env
+
+/src/generated/prisma

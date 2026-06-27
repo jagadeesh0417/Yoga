@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { ShoppingBag, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -30,11 +30,9 @@ export interface ShopProduct {
 interface ProductCardProps {
   product: ShopProduct;
   index?: number;
-  onToggleWishlist?: (product: ShopProduct) => void;
-  onAddToCart?: (product: ShopProduct) => void;
 }
 
-export default function ProductCard({ product, index = 0, onToggleWishlist, onAddToCart }: ProductCardProps) {
+export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const inStock = product.stock > 0;
   const lowStock = product.stock > 0 && product.stock <= 10;
   const discount = product.compareAtPrice > product.price ? Math.round((1 - product.price / product.compareAtPrice) * 100) : 0;
@@ -123,25 +121,15 @@ export default function ProductCard({ product, index = 0, onToggleWishlist, onAd
         </div>
       </Link>
 
-      <div className="absolute top-3 right-3 z-20 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        {onToggleWishlist && (
-          <button
-            onClick={(e) => { e.preventDefault(); onToggleWishlist(product); }}
-            className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center hover:bg-white transition-all"
-          >
-            <Heart className={cn("w-4 h-4", product.inWishlist ? "fill-rose-400 text-rose-400" : "text-wine/50")} />
-          </button>
-        )}
-      </div>
-
-      {onAddToCart && inStock && (
-        <div className="absolute bottom-20 right-4 z-20 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-          <button
-            onClick={(e) => { e.preventDefault(); onAddToCart(product); }}
+      {inStock && (
+        <div className="absolute bottom-4 right-4 z-20">
+          <Link
+            href={`/shop/checkout?productId=${product.id}&quantity=1`}
             className="w-10 h-10 rounded-full bg-gradient-to-r from-wine to-purple text-white shadow-lg shadow-wine/30 flex items-center justify-center hover:shadow-xl hover:brightness-110 transition-all"
+            onClick={(e) => e.stopPropagation()}
           >
             <ShoppingBag className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
       )}
     </motion.div>

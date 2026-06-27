@@ -26,12 +26,6 @@ export default function WishlistPage() {
     } catch { /* ignore */ }
   };
 
-  const handleAddToCart = async (product: ShopProduct) => {
-    try {
-      await shopApi.addToCart(product.id, 1);
-    } catch { /* ignore */ }
-  };
-
   return (
     <main className="min-h-screen py-8 md:py-12">
       <div className="max-w-7xl mx-auto px-4">
@@ -67,7 +61,7 @@ export default function WishlistPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {items.map((product, i) => (
-              <ProductCard key={product.id} product={product} index={i} onToggleWishlist={handleToggleWishlist} onAddToCart={handleAddToCart} />
+              <ProductCard key={product.id} product={product} index={i} />
             ))}
           </div>
         )}

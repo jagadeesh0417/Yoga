@@ -322,4 +322,46 @@ export const shopApi = {
       return simulateNetwork({ success: true });
     }
   },
+
+  createBuyNowOrder: async (data: Record<string, unknown>) => {
+    try {
+      const res = await fetch("/api/orders/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      return await res.json();
+    } catch {
+      return simulateNetwork({
+        success: true,
+        order: { id: "ORD_" + Date.now(), orderId: "ORD_" + Date.now(), ...data, createdAt: new Date().toISOString() },
+        razorpay_order_id: "order_" + Date.now(),
+        amount: 100,
+        currency: "INR",
+      });
+    }
+  },
+
+  verifyBuyNowPayment: async (data: Record<string, unknown>) => {
+    try {
+      const res = await fetch("/api/orders/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      return await res.json();
+    } catch {
+      return simulateNetwork({ success: true });
+    }
+  },
+
+  getAdminOrders: async (params?: string) => {
+    try {
+      const res = await fetch(`/api/admin/orders${params ? `?${params}` : ""}`);
+      return await res.json();
+    } catch {
+      return simulateNetwork({ orders: [], total: 0 });
+    }
+  },
+
+  updateAdminOrder: async (id: string, data: Record<string, unknown>) => {
+    try {
+      const res = await fetch(`/api/admin/orders/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      return await res.json();
+    } catch {
+      return simulateNetwork({ success: true });
+    }
+  },
 };

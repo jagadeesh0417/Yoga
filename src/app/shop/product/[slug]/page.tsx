@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, Minus, Plus, ShoppingBag, Star, ChevronRight, Check, Truck, Shield, RotateCcw } from "lucide-react";
+import { Minus, Plus, Star, ChevronRight, Check, Truck, Shield, RotateCcw, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { shopApi } from "@/lib/shop-api";
 import ProductCard from "@/components/shop/ProductCard";
@@ -14,14 +14,13 @@ import MagneticButton from "@/components/animations/MagneticButton";
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const [product, setProduct] = useState<ShopProduct | null>(null);
   const [related, setRelated] = useState<ShopProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [addingToCart, setAddingToCart] = useState(false);
-  const [inWishlist, setInWishlist] = useState(false);
 
   const slug = params?.slug as string;
 
@@ -37,21 +36,9 @@ export default function ProductDetailPage() {
     });
   }, [slug]);
 
-  const handleAddToCart = async () => {
+  const handleBuyNow = () => {
     if (!product) return;
-    setAddingToCart(true);
-    try {
-      await shopApi.addToCart(product.id, quantity);
-    } catch { /* ignore */ }
-    setAddingToCart(false);
-  };
-
-  const handleToggleWishlist = async () => {
-    if (!product) return;
-    try {
-      await shopApi.toggleWishlist(product.id);
-      setInWishlist(!inWishlist);
-    } catch { /* ignore */ }
+    router.push(`/shop/checkout?productId=${product.id}&quantity=${quantity}`);
   };
 
   if (loading) {
@@ -233,19 +220,11 @@ export default function ProductDetailPage() {
               </div>
 
               <button
-                onClick={handleAddToCart}
-                disabled={!inStock || addingToCart}
+                onClick={handleBuyNow}
+                disabled={!inStock}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-wine to-purple text-white font-medium text-sm shadow-lg shadow-wine/20 hover:shadow-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                <ShoppingBag className="w-4 h-4" />
-                {addingToCart ? "Adding..." : "Add to Cart"}
-              </button>
-
-              <button
-                onClick={handleToggleWishlist}
-                className="w-12 h-12 rounded-xl border border-wine/20 flex items-center justify-center hover:bg-rose-light transition-all"
-              >
-                <Heart className={cn("w-5 h-5", inWishlist ? "fill-rose-400 text-rose-400" : "text-wine/50")} />
+                Buy Now
               </button>
             </div>
 

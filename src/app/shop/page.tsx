@@ -41,12 +41,6 @@ export default function ShopPage() {
     } catch { /* ignore */ }
   };
 
-  const handleAddToCart = async (product: ShopProduct) => {
-    try {
-      await shopApi.addToCart(product.id, 1);
-    } catch { /* ignore */ }
-  };
-
   return (
     <main className="min-h-screen">
       <section className="relative overflow-hidden gradient-primary py-20 md:py-28">
@@ -134,7 +128,7 @@ export default function ShopPage() {
               <SectionTitle title="Featured Products" align="left" />
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {featured.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i} onToggleWishlist={handleToggleWishlist} onAddToCart={handleAddToCart} />
+                  <ProductCard key={product.id} product={product} index={i}  />
                 ))}
               </div>
             </section>
@@ -147,7 +141,7 @@ export default function ShopPage() {
                 <div className="flex gap-4 md:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none -mx-4 px-4">
                   {newArrivals.map((product, i) => (
                     <div key={product.id} className="min-w-[260px] sm:min-w-[280px] snap-start">
-                      <ProductCard product={product} index={i} onToggleWishlist={handleToggleWishlist} onAddToCart={handleAddToCart} />
+                      <ProductCard product={product} index={i}  />
                     </div>
                   ))}
                 </div>
@@ -160,7 +154,7 @@ export default function ShopPage() {
               <SectionTitle title="Best Sellers" subtitle="Most loved by our community" align="left" />
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {bestSellers.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i} onToggleWishlist={handleToggleWishlist} onAddToCart={handleAddToCart} />
+                  <ProductCard key={product.id} product={product} index={i}  />
                 ))}
               </div>
             </section>
@@ -170,7 +164,7 @@ export default function ShopPage() {
             <SectionTitle title="All Products" align="left" />
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {filtered.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i} onToggleWishlist={handleToggleWishlist} onAddToCart={handleAddToCart} />
+                <ProductCard key={product.id} product={product} index={i}  />
               ))}
             </div>
           </section>
