@@ -173,7 +173,7 @@ export default function YogaDietPage() {
     <main>
       {/* Hero */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden gradient-primary">
-        <div className="absolute inset-0 bg-[url('/images/yoga-diet-hero.jpg')] bg-cover bg-center opacity-30" />
+        <div className="absolute inset-0 bg-[url('/images/yoga-diet-hero.png')] bg-cover bg-center opacity-30" />
         <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] animate-mandala" />
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-gold/5 blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-ivory/5 blur-3xl" />
@@ -254,7 +254,7 @@ export default function YogaDietPage() {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-xl">
                 <img
-                  src="/images/yoga-diet-about.jpg"
+                  src="/images/yoga-diet-about.png"
                   alt="Yoga and healthy nutrition"
                   className="w-full h-[400px] md:h-[500px] object-cover"
                 />
@@ -329,6 +329,7 @@ export default function YogaDietPage() {
 
       {/* What's Included */}
       <section className="relative py-24 md:py-32 gradient-lavender overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/yoga-diet-hero-2.png')] bg-cover bg-center opacity-[0.04]" />
         <div className="absolute top-0 left-0 w-80 h-80 bg-wine/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
@@ -462,6 +463,7 @@ export default function YogaDietPage() {
 
       {/* Why Choose Mystic Yoga */}
       <section className="relative py-24 md:py-32 gradient-lavender overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/yoga-diet-about-2.png')] bg-cover bg-center opacity-[0.06]" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-wine/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
