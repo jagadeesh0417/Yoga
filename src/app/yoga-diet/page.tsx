@@ -1,24 +1,83 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Check, ArrowRight, Sparkles, ChevronDown,
-  Apple, Activity, Brain, Heart, Moon, Sun, Zap,
-  Dumbbell, Salad, Users, GraduationCap,
-  Briefcase, Home, Star, Target, Clock,
-  MessageCircle, BookOpen, Leaf, Flame,
-  Menu as MenuIcon
+  Heart, Target, Moon, Sun, Zap, Brain, Apple,
+  Droplet, Star, Quote, X
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn, bookConsultationLink, whatsappLink } from '@/lib/utils';
-import SectionTitle from '@/components/SectionTitle';
+import dynamic from 'next/dynamic';
+
+const FloatingParticles = dynamic(
+  () => import('@/components/animations/FloatingParticles'),
+  { ssr: false }
+);
+
+interface Orb {
+  id: number;
+  size: number;
+  x: number;
+  y: number;
+  duration: number;
+  delay: number;
+}
+
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed * 9301 + 49297) * 49297;
+  return x - Math.floor(x);
+}
+
+function generateOrbs(count: number, offset = 0): Orb[] {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    size: seededRandom(i + 1 + offset) * 200 + 100,
+    x: seededRandom(i + 100 + offset) * 100,
+    y: seededRandom(i + 200 + offset) * 100,
+    duration: seededRandom(i + 300 + offset) * 8 + 12,
+    delay: seededRandom(i + 400 + offset) * 5,
+  }));
+}
+
+const lotusPetals = Array.from({ length: 8 }, (_, i) => ({
+  id: i,
+  angle: (i * 45) * (Math.PI / 180),
+  delay: i * 0.2,
+}));
+
+const posters = [
+  {
+    src: '/images/yoga-diet-about.png',
+    alt: 'Yoga + Diet Introduction',
+  },
+  {
+    src: '/images/yoga-diet-hero-2.png',
+    alt: 'Personalized Coaching',
+  },
+  {
+    src: '/images/yoga-diet-about-2.png',
+    alt: 'Complete Wellness',
+  },
+  {
+    src: '/images/yoga-diet-hero.png',
+    alt: 'Combo Program',
+  },
+];
+
+const wellnessFeatures = [
+  'Weight Management', 'Digestion', 'Flexibility',
+  'Mental Focus', 'Energy', 'Better Sleep',
+  'Healthy Skin', 'Sustainable Lifestyle',
+];
 
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12 },
+    transition: { staggerChildren: 0.15 },
   },
 };
 
@@ -31,162 +90,129 @@ const staggerItem = {
   },
 };
 
-const cardHover = {
-  rest: { scale: 1 },
-  hover: { scale: 1.03, transition: { duration: 0.3, ease: 'easeOut' } },
+const sectionTitle = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.6 },
 };
 
-const benefits = [
-  { icon: Target, title: 'Weight Management', desc: 'Achieve and maintain your ideal weight with a balanced approach.' },
-  { icon: Zap, title: 'Increased Energy', desc: 'Feel more energetic throughout the day with optimized nutrition and movement.' },
-  { icon: Apple, title: 'Better Digestion', desc: 'Improve gut health through mindful eating and yoga postures.' },
-  { icon: Activity, title: 'Improved Flexibility', desc: 'Enhance your range of motion with targeted yoga sequences.' },
-  { icon: Brain, title: 'Stress Reduction', desc: 'Lower cortisol levels through breathwork and relaxation techniques.' },
-  { icon: Moon, title: 'Better Sleep', desc: 'Rest deeply and wake up refreshed with evening yoga and sleep hygiene.' },
-  { icon: Sun, title: 'Mental Clarity', desc: 'Sharpen focus and mental acuity with meditation and clean nutrition.' },
-  { icon: Heart, title: 'Healthy Lifestyle', desc: 'Build sustainable habits that support lifelong wellness.' },
-  { icon: Activity, title: 'Better Posture', desc: 'Strengthen your core and align your body through regular practice.' },
-  { icon: Shield, title: 'Stronger Immunity', desc: 'Boost your immune system with anti-inflammatory foods and yoga.' },
-];
-
-const whatsIncluded = [
-  {
-    icon: Activity,
-    title: 'Personalized Yoga',
-    items: ['One-on-One Yoga', 'Group Sessions', 'Breathwork', 'Meditation', 'Flexibility', 'Strength Building'],
-    gradient: 'from-wine/20 to-purple/10',
-  },
-  {
-    icon: Apple,
-    title: 'Nutrition Guidance',
-    items: ['Personalized Meal Plan', 'Healthy Eating Habits', 'Lifestyle Coaching', 'Weekly Progress Review', 'Weight Management'],
-    gradient: 'from-gold/20 to-wine/10',
-  },
-  {
-    icon: Leaf,
-    title: 'Complete Wellness Package',
-    items: ['Holistic Health Assessment', 'Integrated Yoga + Diet Plan', 'Progress Tracking', 'Ongoing Support', 'Sustainable Results'],
-    gradient: 'from-purple/20 to-gold/10',
-  },
-];
-
-const whoCanJoin = [
-  { icon: Users, label: 'Beginners' },
-  { icon: Briefcase, label: 'Professionals' },
-  { icon: GraduationCap, label: 'Students' },
-  { icon: Home, label: 'Homemakers' },
-  { icon: Heart, label: 'Seniors' },
-  { icon: Star, label: 'Anyone seeking holistic wellness' },
-];
-
-const howItWorks = [
-  { step: '01', title: 'Book Consultation', desc: 'Schedule a free consultation to discuss your health goals.' },
-  { step: '02', title: 'Health Assessment', desc: 'Complete a comprehensive wellness evaluation.' },
-  { step: '03', title: 'Personalized Yoga Plan', desc: 'Receive a custom yoga routine designed for your needs.' },
-  { step: '04', title: 'Customized Nutrition Plan', desc: 'Get a tailored meal plan aligned with your goals.' },
-  { step: '05', title: 'Weekly Follow-up', desc: 'Stay on track with regular check-ins and adjustments.' },
-  { step: '06', title: 'Achieve Sustainable Results', desc: 'Build lifelong habits for lasting health and wellness.' },
-];
-
-const whyChooseUs = [
-  { icon: Star, title: 'Certified Instructor', desc: 'Learn from experienced and certified yoga professionals.' },
-  { icon: Target, title: 'Personalized Programs', desc: 'Every plan is tailored to your unique body and goals.' },
-  { icon: Leaf, title: 'Holistic Wellness', desc: 'We address mind, body, and nutrition for complete health.' },
-  { icon: Globe, title: 'Online & Offline Sessions', desc: 'Attend from anywhere with flexible session options.' },
-  { icon: Heart, title: 'Individual Attention', desc: 'Small class sizes ensure you get the guidance you deserve.' },
-  { icon: Clock, title: 'Continuous Support', desc: 'We are with you every step of the way on your journey.' },
-];
-
-const faqs = [
-  { q: 'Is this suitable for beginners?', a: 'Absolutely! Our program is designed for all levels, from complete beginners to advanced practitioners. We tailor every plan to your current fitness level.' },
-  { q: 'Are diet plans personalized?', a: 'Yes. Each nutrition plan is customized based on your body type, health goals, dietary preferences, and any medical considerations you may have.' },
-  { q: 'Can I join online?', a: 'Yes! We offer both online and in-person sessions. Our virtual programs are just as comprehensive and effective.' },
-  { q: 'How long is the program?', a: 'The standard program runs for 12 weeks, but we also offer flexible durations based on your specific needs and goals.' },
-  { q: 'How often are follow-ups?', a: 'You will have weekly follow-up sessions to track progress, address concerns, and make adjustments to your plan.' },
-];
-
-function Globe(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M21.54 15H17a2 2 0 0 0-2 2v4.54" /><path d="M7 3.34V5a3 3 0 0 0 3 3v0a2 2 0 0 1 2 2v0c0 1.1.9 2 2 2v0a2 2 0 0 0 2-2v0c0-1.1.9-2 2-2h3.17" /><path d="M11 21.95V18a2 2 0 0 0-2-2v0a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05" /><circle cx="12" cy="12" r="10" />
-    </svg>
-  );
-}
-
-function Shield(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-    </svg>
-  );
-}
-
-function AccordionItem({
-  question,
-  answer,
-  isOpen,
-  onToggle,
-}: {
-  question: string;
-  answer: string;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <div className="border-b border-wine/10 last:border-b-0">
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between py-5 md:py-6 text-left group"
-      >
-        <span className="font-serif text-lg md:text-xl font-semibold text-wine group-hover:text-wine transition-colors duration-300 pr-4">
-          {question}
-        </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
-          className="w-8 h-8 rounded-full bg-wine/5 flex items-center justify-center flex-shrink-0"
-        >
-          <ChevronDown className="w-4 h-4 text-wine" />
-        </motion.div>
-      </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="overflow-hidden"
-          >
-            <p className="pb-5 md:pb-6 text-wine/60 leading-relaxed">{answer}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
 export default function YogaDietPage() {
-  const [openFaq, setOpenFaq] = useState<string | null>(null);
+  const [floatingOrbs] = useState<Orb[]>(() => generateOrbs(6));
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (lightboxIndex !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [lightboxIndex]);
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden gradient-primary">
-        <div className="absolute inset-0 bg-[url('/images/yoga-diet-hero.png')] bg-cover bg-center opacity-30" />
-        <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] animate-mandala" />
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-gold/5 blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-ivory/5 blur-3xl" />
-        <div className="absolute inset-0 bg-gradient-to-t from-wine/80 via-wine/40 to-wine/50" />
+      {/* ===== HERO (exact replica of homepage HeroSection structure) ===== */}
+      <section
+        id="yoga-diet-hero"
+        suppressHydrationWarning
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      >
+        <FloatingParticles count={15} />
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 gradient-primary" />
+          <Image
+            src="/images/homepage.png"
+            alt="MYSTIC YOGA"
+            fill
+            priority
+            className="object-contain opacity-40"
+          />
+        </div>
+
+        <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] z-0 animate-mandala" />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-wine/80 via-transparent to-purple/30 z-0" />
+
+        {floatingOrbs.map((orb) => (
+          <motion.div
+            key={orb.id}
+            suppressHydrationWarning
+            className="absolute rounded-full pointer-events-none z-0"
+            style={{
+              width: orb.size,
+              height: orb.size,
+              left: `${orb.x}%`,
+              top: `${orb.y}%`,
+              backgroundImage:
+                'radial-gradient(circle, rgba(212,163,115,0.08) 0%, transparent 70%)',
+            }}
+            animate={{
+              x: [0, 30, -20, 0],
+              y: [0, -40, 20, 0],
+              scale: [1, 1.1, 0.95, 1],
+            }}
+            transition={{
+              duration: orb.duration,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: orb.delay,
+            }}
+          />
+        ))}
+
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-purple/5 blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-wine/20 blur-3xl" />
+        </div>
+
+        {lotusPetals.map((petal) => (
+          <motion.div
+            key={petal.id}
+            suppressHydrationWarning
+            className="absolute w-3 h-3 rounded-full z-0"
+            style={{
+              left: '50%',
+              top: '50%',
+              backgroundImage:
+                'radial-gradient(circle, rgba(212,163,115,0.15) 0%, transparent 70%)',
+              boxShadow: '0 0 20px rgba(212,163,115,0.1)',
+            }}
+            animate={{
+              x: [
+                0,
+                Math.cos(petal.angle) * 180,
+                Math.cos(petal.angle + 0.5) * 120,
+                0,
+              ],
+              y: [
+                0,
+                Math.sin(petal.angle) * 180,
+                Math.sin(petal.angle + 0.5) * 120,
+                0,
+              ],
+              scale: [0, 1.5, 1, 0],
+              opacity: [0, 0.6, 0.4, 0],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: petal.delay,
+            }}
+          />
+        ))}
+
+        <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="mb-6"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-gold text-sm tracking-widest uppercase mb-6">
-              <Sparkles size={14} />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-gold text-sm tracking-widest uppercase">
+              <Quote size={14} />
               Yoga + Diet Program
             </span>
           </motion.div>
@@ -195,52 +221,73 @@ export default function YogaDietPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-            className="font-serif text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-ivory leading-tight"
+            className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-ivory leading-tight tracking-tight"
           >
-            Transform Your Body.{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-gold">
-              Balance Your Life.
+            Transform Your
+            <br />
+            <span className="text-gradient-gold">
+              Body
             </span>
+            <br />
+            Balance Your Life.
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="mt-6 text-lg md:text-xl text-ivory/70 max-w-2xl mx-auto leading-relaxed"
+            className="mt-6 text-lg md:text-xl lg:text-2xl text-ivory/70 max-w-2xl leading-relaxed font-light"
           >
-            Experience the perfect combination of mindful yoga and personalized nutrition designed to improve your physical health, mental clarity, and overall well-being.
+            Experience the perfect combination of mindful yoga and personalized
+            nutrition designed to improve your physical health, mental clarity,
+            and overall well-being.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="mt-10 flex flex-col sm:flex-row gap-4"
           >
             <Link
               href={bookConsultationLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold hover:bg-gold/90 text-wine font-semibold text-sm transition-all duration-300 shadow-lg shadow-gold/20 hover:shadow-gold/30 hover:-translate-y-0.5"
+              className="px-8 py-4 rounded-full bg-gold text-wine font-semibold text-base tracking-wide transition-all duration-300 hover:shadow-lg hover:shadow-gold/30 hover:brightness-110 inline-block"
             >
               Book Free Consultation
-              <ArrowRight size={16} />
             </Link>
             <Link
-              href={whatsappLink('Hi! I am interested in the Yoga + Diet Program at MYSTIC YOGA™. Please share more details.')}
+              href={whatsappLink('Hi! I am interested in joining the Yoga + Diet Program at MYSTIC YOGA™.')}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-ivory/30 hover:border-ivory/60 text-ivory font-semibold text-sm transition-all duration-300 hover:-translate-y-0.5"
+              className="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-gold font-semibold text-base tracking-wide transition-all duration-300 hover:bg-gold/20 hover:border-gold/60 inline-block"
             >
               Join Program
             </Link>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1.2 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          >
+            <span className="text-ivory/40 text-xs tracking-widest uppercase">Scroll</span>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ChevronDown size={20} className="text-gold/60" />
+            </motion.div>
+          </motion.div>
         </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-ivory to-transparent z-10" />
       </section>
 
-      {/* About Program */}
-      <section className="relative py-24 md:py-32 gradient-rose overflow-hidden">
+      {/* ===== Section 1 — Yoga + Diet Introduction ===== */}
+      <section className="relative py-24 md:py-32 gradient-lavender overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-wine/5 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
@@ -252,16 +299,18 @@ export default function YogaDietPage() {
               transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const }}
               className="relative"
             >
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
+              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
                 <img
                   src="/images/yoga-diet-about.png"
-                  alt="Yoga and healthy nutrition"
-                  className="w-full h-[400px] md:h-[500px] object-cover"
+                  alt="Yoga + Diet Introduction"
+                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-wine/40 via-transparent to-transparent" />
-              </div>
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-2xl bg-gold/10 backdrop-blur-md border border-gold/20 flex items-center justify-center hidden md:flex">
-                <Leaf className="w-12 h-12 text-gold" />
+                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
+                    Yoga + Diet
+                  </span>
+                </div>
               </div>
             </motion.div>
 
@@ -271,333 +320,456 @@ export default function YogaDietPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] as const }}
             >
-              <span className="text-gold font-semibold text-sm tracking-[0.2em] uppercase">About the Program</span>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-wine-purple mt-3 leading-tight">
+              <motion.span {...sectionTitle} className="text-gold font-semibold text-sm tracking-[0.2em] uppercase">
+                Introduction
+              </motion.span>
+              <motion.h2 {...sectionTitle} className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-wine-purple mt-3 leading-tight">
                 Yoga <span className="text-gold">+</span> Diet
-              </h2>
-              <div className="w-12 h-0.5 bg-gold mt-5 mb-6" />
-              <p className="text-wine/60 text-base md:text-lg leading-relaxed mb-4">
-                True wellness begins when movement and nutrition work together.
-              </p>
-              <p className="text-wine/60 text-base md:text-lg leading-relaxed">
-                Our Yoga + Diet Program combines personalized yoga sessions with customized nutrition guidance to improve flexibility, strength, energy, digestion, mental wellness, and long-term healthy habits.
-              </p>
+              </motion.h2>
+              <motion.p {...sectionTitle} transition={{ ...sectionTitle.transition, delay: 0.1 }}
+                className="text-wine/40 text-lg md:text-xl font-semibold tracking-wide uppercase mt-2"
+              >
+                The Ultimate Biohack
+              </motion.p>
+              <motion.div {...sectionTitle} transition={{ ...sectionTitle.transition, delay: 0.15 }}
+                className="w-12 h-0.5 bg-gold mt-5 mb-6"
+              />
+
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8"
+              >
+                {[
+                  { icon: Activity, label: 'Mindful Movement' },
+                  { icon: Apple, label: 'Intelligent Nutrition' },
+                  { icon: Heart, label: 'Balance Your Body' },
+                  { icon: Sun, label: 'Nourish Your Life' },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <motion.div
+                      key={item.label}
+                      variants={staggerItem}
+                      className="flex items-center gap-3 p-4 rounded-xl bg-white/60 backdrop-blur-sm border border-wine/5"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-wine/10 to-gold/10 flex items-center justify-center shrink-0">
+                        <Icon className="w-5 h-5 text-wine" />
+                      </div>
+                      <span className="font-medium text-wine text-sm">{item.label}</span>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <Link
+                  href={bookConsultationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-wine to-purple text-white font-medium text-sm hover:bg-wine/90 transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-wine/20"
+                >
+                  Learn More
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Benefits */}
+      {/* ===== Section 2 — Personalized Coaching ===== */}
+      <section className="relative py-24 md:py-32 gradient-rose overflow-hidden">
+        <div className="absolute top-0 left-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-wine/5 rounded-full blur-3xl" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+            >
+              <motion.span {...sectionTitle} className="text-gold font-semibold text-sm tracking-[0.2em] uppercase">
+                Personalized Coaching
+              </motion.span>
+              <motion.h2 {...sectionTitle} className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-wine-purple mt-3 leading-tight">
+                Personalized Yoga{' '}
+                <span className="text-gold">&</span> Nutrition
+              </motion.h2>
+              <motion.div {...sectionTitle} transition={{ ...sectionTitle.transition, delay: 0.15 }}
+                className="w-12 h-0.5 bg-gold mt-5 mb-5"
+              />
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-wine/60 text-base md:text-lg leading-relaxed mb-4 italic"
+              >
+                Everyone is different.
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.25 }}
+                className="text-wine/60 text-base md:text-lg leading-relaxed mb-6"
+              >
+                Receive a customized yoga practice and nutrition plan based on
+                your body, goals, and lifestyle.
+              </motion.p>
+
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="space-y-3"
+              >
+                {[
+                  'One-on-One Coaching',
+                  'Personalized Diet Plan',
+                  'Breathwork',
+                  'Meditation',
+                  'Weekly Support',
+                ].map((feature) => (
+                  <motion.div
+                    key={feature}
+                    variants={staggerItem}
+                    className="flex items-start gap-3 text-wine/70"
+                  >
+                    <span className="mt-0.5 w-6 h-6 rounded-full bg-gradient-to-br from-wine/10 to-gold/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3.5 h-3.5 text-wine" />
+                    </span>
+                    <span className="text-base">{feature}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+              className="relative"
+            >
+              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
+                <img
+                  src="/images/yoga-diet-hero-2.png"
+                  alt="Personalized Coaching"
+                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
+                    Personal Coaching
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Section 3 — Complete Wellness ===== */}
       <section className="relative py-24 md:py-32 gradient-primary overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] animate-mandala" />
+        <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] z-0 animate-mandala" />
         <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full bg-gold/5 blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-ivory/5 blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <SectionTitle
-            title="Benefits You Will Experience"
-            subtitle="Transform every dimension of your wellbeing with our integrated approach."
-            light
-          />
-
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5"
-          >
-            {benefits.map((benefit, i) => {
-              const Icon = benefit.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={staggerItem}
-                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                  className="group relative rounded-2xl p-6 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-500"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-gold/15 flex items-center justify-center mb-4 group-hover:bg-gold/25 transition-all duration-300">
-                    <Icon className="w-6 h-6 text-gold" />
-                  </div>
-                  <h3 className="font-serif text-lg font-bold text-ivory mb-2">{benefit.title}</h3>
-                  <p className="text-ivory/60 text-sm leading-relaxed">{benefit.desc}</p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* What's Included */}
-      <section className="relative py-24 md:py-32 gradient-lavender overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/yoga-diet-hero-2.png')] bg-cover bg-center opacity-[0.04]" />
-        <div className="absolute top-0 left-0 w-80 h-80 bg-wine/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <SectionTitle
-            title="What's Included"
-            subtitle="A comprehensive program designed for complete transformation."
-          />
-
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
-          >
-            {whatsIncluded.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={staggerItem}
-                  whileHover="hover"
-                  initial="rest"
-                  className="group relative rounded-2xl p-8 bg-white/80 backdrop-blur-sm border border-wine/5 shadow-sm hover:shadow-xl transition-all duration-500"
-                >
-                  <div className={cn(
-                    "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br",
-                    item.gradient
-                  )}>
-                    <Icon className="w-8 h-8 text-wine" />
-                  </div>
-                  <h3 className="font-serif text-2xl font-bold text-wine mb-4">{item.title}</h3>
-                  <ul className="space-y-3">
-                    {item.items.map((li) => (
-                      <li key={li} className="flex items-start gap-3 text-wine/70">
-                        <span className="mt-0.5 w-5 h-5 rounded-full bg-gradient-to-br from-wine/10 to-gold/10 flex items-center justify-center flex-shrink-0">
-                          <Check className="w-3 h-3 text-wine" />
-                        </span>
-                        <span className="text-sm md:text-base">{li}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Who Can Join */}
-      <section className="relative py-24 md:py-32 gradient-primary overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] animate-mandala" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <SectionTitle
-            title="Who Can Join?"
-            subtitle="This program is designed for everyone, regardless of age or fitness level."
-            light
-          />
-
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"
-          >
-            {whoCanJoin.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={staggerItem}
-                  className="group flex flex-col items-center text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300"
-                >
-                  <div className="w-14 h-14 rounded-full bg-gold/15 flex items-center justify-center mb-3 group-hover:bg-gold/25 transition-all duration-300">
-                    <Icon className="w-7 h-7 text-gold" />
-                  </div>
-                  <span className="font-serif text-sm font-semibold text-ivory">{item.label}</span>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="relative py-24 md:py-32 gradient-rose overflow-hidden">
-        <div className="absolute top-1/3 right-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 left-0 w-72 h-72 bg-wine/5 rounded-full blur-3xl" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <SectionTitle
-            title="How It Works"
-            subtitle="Your journey to holistic wellness in six simple steps."
-          />
-
-          <div className="relative">
-            <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-gold via-wine/30 to-transparent hidden md:block" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+              className="relative"
+            >
+              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
+                <img
+                  src="/images/yoga-diet-about-2.png"
+                  alt="Complete Wellness"
+                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
+                    Complete Wellness
+                  </span>
+                </div>
+              </div>
+            </motion.div>
 
             <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
-              className="space-y-8 md:space-y-0 relative"
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] as const }}
             >
-              {howItWorks.map((item, i) => (
-                <motion.div
-                  key={i}
-                  variants={staggerItem}
-                  className="md:flex items-start gap-8 pb-8 md:pb-12 relative"
-                >
-                  <div className="hidden md:flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-wine to-purple text-ivory font-serif text-lg font-bold shadow-lg shrink-0 relative z-10">
-                    {item.step}
-                  </div>
-                  <div className="md:hidden flex items-center gap-4 mb-4">
-                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-wine to-purple text-ivory font-serif text-sm font-bold shrink-0">
-                      {item.step}
-                    </span>
-                    <h3 className="font-serif text-xl font-bold text-wine">{item.title}</h3>
-                  </div>
-                  <div className="flex-1 ml-0 md:ml-4">
-                    <h3 className="hidden md:block font-serif text-xl font-bold text-wine mb-2">{item.title}</h3>
-                    <p className="text-wine/60 leading-relaxed">{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
+              <motion.span {...sectionTitle} className="text-gold font-semibold text-sm tracking-[0.2em] uppercase">
+                Complete Wellness
+              </motion.span>
+              <motion.h2 {...sectionTitle} className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-ivory mt-3 leading-tight">
+                Wellness Beyond{' '}
+                <span className="text-gold">Fitness</span>
+              </motion.h2>
+              <motion.div {...sectionTitle} transition={{ ...sectionTitle.transition, delay: 0.15 }}
+                className="w-12 h-0.5 bg-gold mt-5 mb-6"
+              />
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-ivory/70 text-base md:text-lg leading-relaxed mb-6"
+              >
+                The Yoga + Diet Program helps improve:
+              </motion.p>
+
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="grid grid-cols-2 gap-3"
+              >
+                {wellnessFeatures.map((feature) => (
+                  <motion.div
+                    key={feature}
+                    variants={staggerItem}
+                    className="flex items-center gap-2 p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
+                  >
+                    <Check className="w-4 h-4 text-gold shrink-0" />
+                    <span className="text-ivory/80 text-sm">{feature}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Mystic Yoga */}
+      {/* ===== Section 4 — Combo Program ===== */}
       <section className="relative py-24 md:py-32 gradient-lavender overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/yoga-diet-about-2.png')] bg-cover bg-center opacity-[0.06]" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-wine/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-wine/5 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <SectionTitle
-            title="Why Choose Mystic Yoga"
-            subtitle="We are committed to your transformation with personalized care and expertise."
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+              className="lg:order-2"
+            >
+              <motion.span {...sectionTitle} className="text-gold font-semibold text-sm tracking-[0.2em] uppercase">
+                Combo Program
+              </motion.span>
+              <motion.h2 {...sectionTitle} className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-wine-purple mt-3 leading-tight">
+                Yoga <span className="text-gold">+</span> Diet{' '}
+                <span className="text-gold">Combo</span>
+              </motion.h2>
+              <motion.div {...sectionTitle} transition={{ ...sectionTitle.transition, delay: 0.15 }}
+                className="w-12 h-0.5 bg-gold mt-5 mb-6"
+              />
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-wine/60 text-base md:text-lg leading-relaxed mb-6"
+              >
+                Experience our complete wellness package that combines yoga
+                sessions with personalized nutrition guidance.
+              </motion.p>
 
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {whyChooseUs.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={staggerItem}
-                  whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                  className="group relative rounded-2xl p-8 bg-white/80 backdrop-blur-sm border border-wine/5 shadow-sm hover:shadow-xl transition-all duration-500"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <Link
+                  href={bookConsultationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold hover:bg-gold/90 text-wine font-semibold text-sm transition-all duration-300 shadow-lg shadow-gold/20 hover:shadow-gold/30 hover:-translate-y-0.5"
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-wine/10 to-gold/10 flex items-center justify-center mb-5 group-hover:from-wine group-hover:to-gold transition-all duration-300">
-                    <Icon className="w-7 h-7 text-wine group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <h3 className="font-serif text-xl font-bold text-wine mb-3">{item.title}</h3>
-                  <p className="text-wine/60 leading-relaxed text-sm md:text-base">{item.desc}</p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+                  Book Your Consultation
+                  <ArrowRight size={16} />
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+              className="relative lg:order-1"
+            >
+              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
+                <img
+                  src="/images/yoga-diet-hero.png"
+                  alt="Yoga + Diet Combo"
+                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
+                    Combo Package
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ===== Image Gallery ===== */}
       <section className="relative py-24 md:py-32 gradient-rose overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-wine/5 rounded-full blur-3xl" />
-        <div className="relative z-10 max-w-3xl mx-auto px-4">
-          <SectionTitle
-            title="Frequently Asked Questions"
-            subtitle="Everything you need to know about our Yoga + Diet Program."
-          />
-
+        <div className="absolute top-0 left-0 w-72 h-72 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-wine/5 rounded-full blur-3xl" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-white/60 backdrop-blur-md border border-white/80 rounded-2xl p-6 md:p-8 shadow-sm"
+            className="text-center mb-12"
           >
-            {faqs.map((faq) => (
-              <AccordionItem
-                key={faq.q}
-                question={faq.q}
-                answer={faq.a}
-                isOpen={openFaq === faq.q}
-                onToggle={() => setOpenFaq(openFaq === faq.q ? null : faq.q)}
-              />
+            <span className="text-gold font-semibold text-sm tracking-[0.2em] uppercase">Gallery</span>
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-wine-purple mt-3 leading-tight">
+              Program Preview
+            </h2>
+            <div className="w-12 h-0.5 bg-gold mt-5 mx-auto" />
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            {posters.map((poster, i) => (
+              <motion.div
+                key={i}
+                variants={staggerItem}
+                onClick={() => setLightboxIndex(i)}
+                className="group relative rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500"
+              >
+                <div className="relative overflow-hidden">
+                  <img
+                    src={poster.src}
+                    alt={poster.alt}
+                    loading="lazy"
+                    className="w-full h-72 md:h-80 object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-wine/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 border-2 border-transparent group-hover:border-gold/50 rounded-2xl transition-all duration-500" />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ivory w-5 h-5">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-ivory text-sm font-medium text-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                    {poster.alt}
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="relative py-24 md:py-36 overflow-hidden gradient-primary">
-        <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] animate-mandala" />
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-gold/5 blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-ivory/5 blur-3xl" />
-
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxIndex !== null && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4"
+            onClick={() => setLightboxIndex(null)}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-ivory/80 text-xs font-medium mb-8">
-              <Sparkles size={14} className="text-gold" />
-              Begin Your Wellness Journey Today
-            </div>
-          </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-            className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-ivory leading-tight"
-          >
-            Begin Your Wellness{' '}
-            <br />
-            <span className="text-gold">Journey Today</span>
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-            className="mt-6 text-ivory/60 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
-          >
-            Experience yoga and nutrition together for lasting health.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link
-              href={whatsappLink('Hi! I want to join the Yoga + Diet Program at MYSTIC YOGA™. Please share the next steps.')}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold hover:bg-gold/90 text-wine font-semibold text-sm transition-all duration-300 shadow-lg shadow-gold/20 hover:shadow-gold/30 hover:-translate-y-0.5"
+            <button
+              onClick={() => setLightboxIndex(null)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
+              aria-label="Close lightbox"
             >
-              Join Now
-              <ArrowRight size={16} />
-            </Link>
-            <Link
-              href={bookConsultationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-ivory/30 hover:border-ivory/60 text-ivory font-semibold text-sm transition-all duration-300 hover:-translate-y-0.5"
+              <X size={24} />
+            </button>
+
+            {lightboxIndex !== null && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxIndex(lightboxIndex === 0 ? posters.length - 1 : lightboxIndex - 1);
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
+                  aria-label="Previous image"
+                >
+                  <ChevronDown className="w-6 h-6 rotate-90" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxIndex(lightboxIndex === posters.length - 1 ? 0 : lightboxIndex + 1);
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
+                  aria-label="Next image"
+                >
+                  <ChevronDown className="w-6 h-6 -rotate-90" />
+                </button>
+              </>
+            )}
+
+            <motion.div
+              key={lightboxIndex}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              className="max-w-4xl w-full max-h-[85vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              Contact Us
-            </Link>
+              <img
+                src={posters[lightboxIndex].src}
+                alt={posters[lightboxIndex].alt}
+                className="w-full h-full object-contain rounded-2xl"
+              />
+              <p className="text-center text-ivory/60 text-sm mt-4">
+                {posters[lightboxIndex].alt}
+              </p>
+            </motion.div>
           </motion.div>
-        </div>
-      </section>
+        )}
+      </AnimatePresence>
     </main>
+  );
+}
+
+function Activity(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+    </svg>
   );
 }
