@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Check, ArrowRight, Sparkles, ChevronDown,
   Heart, Target, Moon, Sun, Zap, Brain, Apple,
-  Droplet, Star, Quote, X
+  Droplet, Star, Quote, X, ZoomIn, ZoomOut
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -49,22 +49,10 @@ const lotusPetals = Array.from({ length: 8 }, (_, i) => ({
 }));
 
 const posters = [
-  {
-    src: '/images/yoga-diet-about.png',
-    alt: 'Yoga + Diet Introduction',
-  },
-  {
-    src: '/images/yoga-diet-hero-2.png',
-    alt: 'Personalized Coaching',
-  },
-  {
-    src: '/images/yoga-diet-about-2.png',
-    alt: 'Complete Wellness',
-  },
-  {
-    src: '/images/yoga-diet-hero.png',
-    alt: 'Combo Program',
-  },
+  { src: '/images/yoga-diet-about.png', alt: 'Yoga + Diet Introduction' },
+  { src: '/images/yoga-diet-hero-2.png', alt: 'Personalized Coaching' },
+  { src: '/images/yoga-diet-about-2.png', alt: 'Complete Wellness' },
+  { src: '/images/yoga-diet-hero.png', alt: 'Combo Program' },
 ];
 
 const wellnessFeatures = [
@@ -97,22 +85,111 @@ const sectionTitle = {
   transition: { duration: 0.6 },
 };
 
+function PosterCard({ src, alt, onClick }: { src: string; alt: string; onClick: () => void }) {
+  return (
+    <motion.div
+      variants={staggerItem}
+      onClick={onClick}
+      className="group relative rounded-[20px] cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 bg-white/5"
+      style={{ willChange: 'transform' }}
+    >
+      <div className="relative rounded-[20px] overflow-hidden">
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className="w-full h-auto object-contain block"
+        />
+        <div className="absolute inset-0 border-2 border-transparent group-hover:border-gold/50 rounded-[20px] transition-all duration-300 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-wine/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+        <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ivory w-5 h-5">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+      </div>
+      <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
+        <div className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-ivory text-sm font-medium text-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+          {alt}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function PosterSection({ src, alt, className }: { src: string; alt: string; className?: string }) {
+  return (
+    <div className={cn("relative rounded-[20px] shadow-xl bg-white/5", className)}>
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="w-full h-auto object-contain block rounded-[20px]"
+      />
+    </div>
+  );
+}
+
 export default function YogaDietPage() {
   const [floatingOrbs] = useState<Orb[]>(() => generateOrbs(6));
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
 
   useEffect(() => {
     if (lightboxIndex !== null) {
       document.body.style.overflow = 'hidden';
+      setZoomLevel(1);
     } else {
       document.body.style.overflow = '';
     }
     return () => { document.body.style.overflow = ''; };
   }, [lightboxIndex]);
 
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (lightboxIndex === null) return;
+    const idx = lightboxIndex;
+    if (e.key === 'Escape') { setLightboxIndex(null); return; }
+    if (e.key === 'ArrowLeft') {
+      setLightboxIndex(idx === 0 ? posters.length - 1 : idx - 1);
+      setZoomLevel(1);
+    }
+    if (e.key === 'ArrowRight') {
+      setLightboxIndex(idx === posters.length - 1 ? 0 : idx + 1);
+      setZoomLevel(1);
+    }
+  }, [lightboxIndex]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null || lightboxIndex === null) return;
+    const diff = e.changedTouches[0].clientX - touchStart;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        setLightboxIndex(lightboxIndex === 0 ? posters.length - 1 : lightboxIndex - 1);
+      } else {
+        setLightboxIndex(lightboxIndex === posters.length - 1 ? 0 : lightboxIndex + 1);
+      }
+      setZoomLevel(1);
+    }
+    setTouchStart(null);
+  };
+
   return (
     <main>
-      {/* ===== HERO (exact replica of homepage HeroSection structure) ===== */}
+      {/* ===== HERO ===== */}
       <section
         id="yoga-diet-hero"
         suppressHydrationWarning
@@ -132,7 +209,6 @@ export default function YogaDietPage() {
         </div>
 
         <div className="absolute inset-0 bg-[url('/mandala-pattern.svg')] bg-center bg-no-repeat bg-cover opacity-[0.03] z-0 animate-mandala" />
-
         <div className="absolute inset-0 bg-gradient-to-t from-wine/80 via-transparent to-purple/30 z-0" />
 
         {floatingOrbs.map((orb) => (
@@ -141,24 +217,11 @@ export default function YogaDietPage() {
             suppressHydrationWarning
             className="absolute rounded-full pointer-events-none z-0"
             style={{
-              width: orb.size,
-              height: orb.size,
-              left: `${orb.x}%`,
-              top: `${orb.y}%`,
-              backgroundImage:
-                'radial-gradient(circle, rgba(212,163,115,0.08) 0%, transparent 70%)',
+              width: orb.size, height: orb.size, left: `${orb.x}%`, top: `${orb.y}%`,
+              backgroundImage: 'radial-gradient(circle, rgba(212,163,115,0.08) 0%, transparent 70%)',
             }}
-            animate={{
-              x: [0, 30, -20, 0],
-              y: [0, -40, 20, 0],
-              scale: [1, 1.1, 0.95, 1],
-            }}
-            transition={{
-              duration: orb.duration,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: orb.delay,
-            }}
+            animate={{ x: [0, 30, -20, 0], y: [0, -40, 20, 0], scale: [1, 1.1, 0.95, 1] }}
+            transition={{ duration: orb.duration, repeat: Infinity, ease: 'easeInOut', delay: orb.delay }}
           />
         ))}
 
@@ -169,38 +232,19 @@ export default function YogaDietPage() {
 
         {lotusPetals.map((petal) => (
           <motion.div
-            key={petal.id}
-            suppressHydrationWarning
+            key={petal.id} suppressHydrationWarning
             className="absolute w-3 h-3 rounded-full z-0"
             style={{
-              left: '50%',
-              top: '50%',
-              backgroundImage:
-                'radial-gradient(circle, rgba(212,163,115,0.15) 0%, transparent 70%)',
+              left: '50%', top: '50%',
+              backgroundImage: 'radial-gradient(circle, rgba(212,163,115,0.15) 0%, transparent 70%)',
               boxShadow: '0 0 20px rgba(212,163,115,0.1)',
             }}
             animate={{
-              x: [
-                0,
-                Math.cos(petal.angle) * 180,
-                Math.cos(petal.angle + 0.5) * 120,
-                0,
-              ],
-              y: [
-                0,
-                Math.sin(petal.angle) * 180,
-                Math.sin(petal.angle + 0.5) * 120,
-                0,
-              ],
-              scale: [0, 1.5, 1, 0],
-              opacity: [0, 0.6, 0.4, 0],
+              x: [0, Math.cos(petal.angle) * 180, Math.cos(petal.angle + 0.5) * 120, 0],
+              y: [0, Math.sin(petal.angle) * 180, Math.sin(petal.angle + 0.5) * 120, 0],
+              scale: [0, 1.5, 1, 0], opacity: [0, 0.6, 0.4, 0],
             }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: petal.delay,
-            }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: petal.delay }}
           />
         ))}
 
@@ -225,9 +269,7 @@ export default function YogaDietPage() {
           >
             Transform Your
             <br />
-            <span className="text-gradient-gold">
-              Body
-            </span>
+            <span className="text-gradient-gold">Body</span>
             <br />
             Balance Your Life.
           </motion.h1>
@@ -251,16 +293,14 @@ export default function YogaDietPage() {
           >
             <Link
               href={bookConsultationLink}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="px-8 py-4 rounded-full bg-gold text-wine font-semibold text-base tracking-wide transition-all duration-300 hover:shadow-lg hover:shadow-gold/30 hover:brightness-110 inline-block"
             >
               Book Free Consultation
             </Link>
             <Link
               href={whatsappLink('Hi! I am interested in joining the Yoga + Diet Program at MYSTIC YOGA™.')}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-gold font-semibold text-base tracking-wide transition-all duration-300 hover:bg-gold/20 hover:border-gold/60 inline-block"
             >
               Join Program
@@ -291,27 +331,14 @@ export default function YogaDietPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-wine/5 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-              className="relative"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
-                <img
-                  src="/images/yoga-diet-about.png"
-                  alt="Yoga + Diet Introduction"
-                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
-                    Yoga + Diet
-                  </span>
-                </div>
-              </div>
+              <PosterSection src="/images/yoga-diet-about.png" alt="Yoga + Diet Introduction" />
             </motion.div>
 
             <motion.div
@@ -372,8 +399,7 @@ export default function YogaDietPage() {
               >
                 <Link
                   href={bookConsultationLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-wine to-purple text-white font-medium text-sm hover:bg-wine/90 transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-wine/20"
                 >
                   Learn More
@@ -390,7 +416,7 @@ export default function YogaDietPage() {
         <div className="absolute top-0 left-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-wine/5 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -435,11 +461,8 @@ export default function YogaDietPage() {
                 className="space-y-3"
               >
                 {[
-                  'One-on-One Coaching',
-                  'Personalized Diet Plan',
-                  'Breathwork',
-                  'Meditation',
-                  'Weekly Support',
+                  'One-on-One Coaching', 'Personalized Diet Plan',
+                  'Breathwork', 'Meditation', 'Weekly Support',
                 ].map((feature) => (
                   <motion.div
                     key={feature}
@@ -460,21 +483,8 @@ export default function YogaDietPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-              className="relative"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
-                <img
-                  src="/images/yoga-diet-hero-2.png"
-                  alt="Personalized Coaching"
-                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
-                    Personal Coaching
-                  </span>
-                </div>
-              </div>
+              <PosterSection src="/images/yoga-diet-hero-2.png" alt="Personalized Coaching" />
             </motion.div>
           </div>
         </div>
@@ -486,27 +496,14 @@ export default function YogaDietPage() {
         <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full bg-gold/5 blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-ivory/5 blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-              className="relative"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
-                <img
-                  src="/images/yoga-diet-about-2.png"
-                  alt="Complete Wellness"
-                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
-                    Complete Wellness
-                  </span>
-                </div>
-              </div>
+              <PosterSection src="/images/yoga-diet-about-2.png" alt="Complete Wellness" />
             </motion.div>
 
             <motion.div
@@ -563,7 +560,7 @@ export default function YogaDietPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-wine/5 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -601,8 +598,7 @@ export default function YogaDietPage() {
               >
                 <Link
                   href={bookConsultationLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold hover:bg-gold/90 text-wine font-semibold text-sm transition-all duration-300 shadow-lg shadow-gold/20 hover:shadow-gold/30 hover:-translate-y-0.5"
                 >
                   Book Your Consultation
@@ -618,19 +614,7 @@ export default function YogaDietPage() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] as const }}
               className="relative lg:order-1"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-xl group">
-                <img
-                  src="/images/yoga-diet-hero.png"
-                  alt="Yoga + Diet Combo"
-                  className="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-wine/50 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-ivory text-xs font-medium">
-                    Combo Package
-                  </span>
-                </div>
-              </div>
+              <PosterSection src="/images/yoga-diet-hero.png" alt="Yoga + Diet Combo" />
             </motion.div>
           </div>
         </div>
@@ -660,39 +644,15 @@ export default function YogaDietPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
           >
             {posters.map((poster, i) => (
-              <motion.div
+              <PosterCard
                 key={i}
-                variants={staggerItem}
-                onClick={() => setLightboxIndex(i)}
-                className="group relative rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={poster.src}
-                    alt={poster.alt}
-                    loading="lazy"
-                    className="w-full h-72 md:h-80 object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-wine/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute inset-0 border-2 border-transparent group-hover:border-gold/50 rounded-2xl transition-all duration-500" />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ivory w-5 h-5">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-ivory text-sm font-medium text-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                    {poster.alt}
-                  </div>
-                </div>
-              </motion.div>
+                src={poster.src}
+                alt={poster.alt}
+                onClick={() => { setLightboxIndex(i); setZoomLevel(1); }}
+              />
             ))}
           </motion.div>
         </div>
@@ -705,59 +665,77 @@ export default function YogaDietPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-2 md:p-8"
             onClick={() => setLightboxIndex(null)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
+            {/* Top bar */}
+            <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 z-20 bg-gradient-to-b from-black/60 to-transparent">
+              <span className="text-ivory/60 text-sm">
+                {lightboxIndex + 1} / {posters.length}
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setZoomLevel(Math.min(3, zoomLevel + 0.5)); }}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all"
+                  aria-label="Zoom in"
+                >
+                  <ZoomIn size={20} />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setZoomLevel(Math.max(0.5, zoomLevel - 0.5)); }}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all"
+                  aria-label="Zoom out"
+                >
+                  <ZoomOut size={20} />
+                </button>
+                <button
+                  onClick={() => setLightboxIndex(null)}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all"
+                  aria-label="Close lightbox"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+            </div>
+
+            {/* Previous */}
             <button
-              onClick={() => setLightboxIndex(null)}
-              className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
-              aria-label="Close lightbox"
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex === 0 ? posters.length - 1 : lightboxIndex - 1); setZoomLevel(1); }}
+              className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-20"
+              aria-label="Previous image"
             >
-              <X size={24} />
+              <ChevronDown className="w-6 h-6 rotate-90" />
             </button>
 
-            {lightboxIndex !== null && (
-              <>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLightboxIndex(lightboxIndex === 0 ? posters.length - 1 : lightboxIndex - 1);
-                  }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
-                  aria-label="Previous image"
-                >
-                  <ChevronDown className="w-6 h-6 rotate-90" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLightboxIndex(lightboxIndex === posters.length - 1 ? 0 : lightboxIndex + 1);
-                  }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
-                  aria-label="Next image"
-                >
-                  <ChevronDown className="w-6 h-6 -rotate-90" />
-                </button>
-              </>
-            )}
+            {/* Next */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex === posters.length - 1 ? 0 : lightboxIndex + 1); setZoomLevel(1); }}
+              className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-20"
+              aria-label="Next image"
+            >
+              <ChevronDown className="w-6 h-6 -rotate-90" />
+            </button>
 
+            {/* Image */}
             <motion.div
               key={lightboxIndex}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-4xl w-full max-h-[85vh]"
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.25 }}
+              className="flex items-center justify-center w-full h-full"
               onClick={(e) => e.stopPropagation()}
+              style={{ overflow: 'auto' }}
             >
               <img
                 src={posters[lightboxIndex].src}
                 alt={posters[lightboxIndex].alt}
-                className="w-full h-full object-contain rounded-2xl"
+                style={{ transform: `scale(${zoomLevel})`, transition: 'transform 0.2s ease' }}
+                className="max-w-full max-h-full object-contain rounded-lg"
               />
-              <p className="text-center text-ivory/60 text-sm mt-4">
-                {posters[lightboxIndex].alt}
-              </p>
             </motion.div>
           </motion.div>
         )}
