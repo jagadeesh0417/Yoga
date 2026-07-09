@@ -9,8 +9,6 @@ import {
   Filter,
   Sparkles,
   Expand,
-  Loader2,
-  AlertCircle,
   ImageOff,
 } from "lucide-react";
 import Image from "next/image";
@@ -24,19 +22,35 @@ interface GalleryItem {
   image: string;
 }
 
-interface GalleryImageFile {
-  src: string;
-  filename: string;
-}
+const galleryItems: GalleryItem[] = [
+  { id: "7", title: "About Sunita Singh", category: "Events", image: "/images/about-sunita.jpg" },
+  { id: "9", title: "Gallery Collection 2", category: "Meditation", image: "/images/gallery-2.png" },
+  { id: "11", title: "Hero Collection", category: "Yoga", image: "/images/hero-main.jpg" },
+  { id: "12", title: "Gallery Collection 4", category: "Retreats", image: "/images/gallery-4.jpg" },
+  { id: "26", title: "Yoga Practice", category: "Yoga", image: "/images/Screenshot 2026-06-23 143647.png" },
+  { id: "27", title: "Meditation Session", category: "Meditation", image: "/images/Screenshot 2026-06-23 143659.png" },
+  { id: "28", title: "Wellness Journey", category: "Yoga", image: "/images/Screenshot 2026-06-23 143708.png" },
+  { id: "29", title: "Mindfulness Practice", category: "Meditation", image: "/images/Screenshot 2026-06-23 143717.png" },
+  { id: "30", title: "Yoga Asana", category: "Yoga", image: "/images/Screenshot 2026-06-23 143726.png" },
+  { id: "31", title: "Gallery Collection", category: "Events", image: "/images/Screenshot 2026-06-23 143735.png" },
+  { id: "32", title: "Retreat Moments", category: "Retreats", image: "/images/Screenshot 2026-06-23 143744.png" },
+  { id: "33", title: "Training Session", category: "Training", image: "/images/Screenshot 2026-06-23 143751.png" },
+  { id: "34", title: "Yoga Studio", category: "Yoga", image: "/images/Screenshot 2026-06-23 143758.png" },
+  { id: "35", title: "Wellness Event", category: "Events", image: "/images/Screenshot 2026-06-23 143804.png" },
+  { id: "36", title: "Wellness Gallery", category: "Yoga", image: "/images/Screenshot 2026-06-23 143821.png" },
+  { id: "37", title: "Meditation Space", category: "Meditation", image: "/images/Screenshot 2026-06-23 143913.png" },
+  { id: "38", title: "Yoga Session", category: "Yoga", image: "/images/Screenshot 2026-06-23 150901.png" },
+  { id: "39", title: "Wellness Retreat", category: "Retreats", image: "/images/Screenshot 2026-06-23 150909.png" },
+  { id: "40", title: "Meditation Practice", category: "Meditation", image: "/images/Screenshot 2026-06-23 150919.png" },
+  { id: "41", title: "Yoga Training", category: "Training", image: "/images/Screenshot 2026-06-23 150940.png" },
+  { id: "42", title: "Wellness Workshop", category: "Events", image: "/images/Screenshot 2026-06-23 150947.png" },
+  { id: "43", title: "Yoga Class", category: "Yoga", image: "/images/Screenshot 2026-06-23 150955.png" },
+  { id: "44", title: "Meditation Space", category: "Meditation", image: "/images/Screenshot 2026-06-23 151003.png" },
+  { id: "45", title: "Fitness Session", category: "Training", image: "/images/Screenshot 2026-06-23 151013.png" },
+  { id: "46", title: "Wellness Gallery", category: "Yoga", image: "/images/Screenshot 2026-06-23 151024.png" },
+];
 
-function filenameToTitle(filename: string): string {
-  return filename
-    .replace(/\.[^/.]+$/, "")
-    .replace(/[-_]/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-const CATEGORIES = ["All", "Gallery"];
+const categories = ["All", ...Array.from(new Set(galleryItems.map((i) => i.category)))];
 
 function GalleryCard({
   item,
@@ -207,39 +221,13 @@ function Lightbox({
 }
 
 export default function GalleryPage() {
-  const [items, setItems] = useState<GalleryItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
 
-  useEffect(() => {
-    fetch("/api/gallery-images")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load gallery");
-        return res.json() as Promise<GalleryImageFile[]>;
-      })
-      .then((files) => {
-        setItems(
-          files.map((f, i) => ({
-            id: String(i + 1),
-            title: filenameToTitle(f.filename),
-            category: "Gallery",
-            image: f.src,
-          }))
-        );
-        setLoading(false);
-      })
-      .catch((err: Error) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
   const filtered =
     activeCategory === "All"
-      ? items
-      : items.filter((i) => i.category === activeCategory);
+      ? galleryItems
+      : galleryItems.filter((i) => i.category === activeCategory);
 
   const handlePrev = useCallback(() => {
     if (!selectedItem) return;
@@ -302,7 +290,7 @@ export default function GalleryPage() {
           className="bg-white rounded-2xl shadow-xl shadow-black/5 p-3 sm:p-4 flex flex-wrap items-center justify-center gap-2"
         >
           <Filter size={14} className="text-wine/30 mr-1" />
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
@@ -322,47 +310,18 @@ export default function GalleryPage() {
       {/* Masonry Grid */}
       <section className="relative py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {loading && (
-            <div className="flex items-center justify-center py-32">
-              <div className="text-center">
-                <Loader2 size={32} className="animate-spin text-gold mx-auto mb-4" />
-                <p className="text-wine/50 text-sm">Loading gallery...</p>
-              </div>
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {filtered.map((item, index) => (
+              <GalleryCard
+                key={item.id}
+                item={item}
+                index={index}
+                onSelect={setSelectedItem}
+              />
+            ))}
+          </div>
 
-          {error && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-20"
-            >
-              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-                <AlertCircle size={24} className="text-red-500" />
-              </div>
-              <h3 className="font-serif text-xl font-bold text-wine mb-2">
-                Failed to load gallery
-              </h3>
-              <p className="text-wine/50 text-sm max-w-md mx-auto">
-                {error}. Please refresh the page or try again later.
-              </p>
-            </motion.div>
-          )}
-
-          {!loading && !error && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {filtered.map((item, index) => (
-                <GalleryCard
-                  key={item.id}
-                  item={item}
-                  index={index}
-                  onSelect={setSelectedItem}
-                />
-              ))}
-            </div>
-          )}
-
-          {!loading && !error && filtered.length === 0 && (
+          {filtered.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -372,10 +331,10 @@ export default function GalleryPage() {
                 <Sparkles size={24} className="text-gold" />
               </div>
               <h3 className="font-serif text-xl font-bold text-wine mb-2">
-                No images found
+                No images in this category
               </h3>
               <p className="text-wine/50 text-sm">
-                No images are available in the gallery right now.
+                Try selecting a different category to explore more.
               </p>
             </motion.div>
           )}
