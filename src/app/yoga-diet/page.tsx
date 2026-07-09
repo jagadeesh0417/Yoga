@@ -98,7 +98,7 @@ function PosterCard({ src, alt, onClick }: { src: string; alt: string; onClick: 
           src={src}
           alt={alt}
           loading="lazy"
-          className="w-full h-auto object-contain block"
+          className="w-full h-auto block"
         />
         <div className="absolute inset-0 border-2 border-transparent group-hover:border-gold/50 rounded-[20px] transition-all duration-300 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-wine/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -127,7 +127,7 @@ function PosterSection({ src, alt, className }: { src: string; alt: string; clas
         src={src}
         alt={alt}
         loading="lazy"
-        className="w-full h-auto object-contain block rounded-[20px]"
+        className="w-full h-auto block rounded-[20px]"
       />
     </div>
   );
