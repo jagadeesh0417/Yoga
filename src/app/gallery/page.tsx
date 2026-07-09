@@ -9,6 +9,9 @@ import {
   Filter,
   Sparkles,
   Expand,
+  Loader2,
+  AlertCircle,
+  ImageOff,
 } from "lucide-react";
 import Image from "next/image";
 import ResponsiveImage from "@/components/ResponsiveImage";
@@ -21,14 +24,19 @@ interface GalleryItem {
   image: string;
 }
 
-const galleryItems: GalleryItem[] = [
-  { id: "7", title: "About Sunita Singh", category: "Events", image: "/images/about-sunita.jpg" },
-  { id: "9", title: "Gallery Collection 2", category: "Meditation", image: "/images/gallery-2.png" },
-  { id: "11", title: "Hero Collection", category: "Yoga", image: "/images/hero-main.jpg" },
-  { id: "12", title: "Gallery Collection 4", category: "Retreats", image: "/images/gallery-4.jpg" },
-];
+interface GalleryImageFile {
+  src: string;
+  filename: string;
+}
 
-const categories = ["All", ...Array.from(new Set(galleryItems.map((i) => i.category)))];
+function filenameToTitle(filename: string): string {
+  return filename
+    .replace(/\.[^/.]+$/, "")
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+const CATEGORIES = ["All", "Gallery"];
 
 function GalleryCard({
   item,
@@ -88,6 +96,7 @@ function Lightbox({
   onNext: () => void;
 }) {
   const currentIndex = items.findIndex((i) => i.id === item.id);
+  const [lightboxError, setLightboxError] = useState(false);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -128,19 +137,29 @@ function Lightbox({
           </button>
         </div>
 
-        <motion.div
-          key={item.id}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="relative w-full aspect-[4/3] md:aspect-[16/9] rounded-2xl overflow-hidden bg-wine"
-        >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-contain"
-          />
+          <motion.div
+            key={item.id}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="relative w-full aspect-[4/3] md:aspect-[16/9] rounded-2xl overflow-hidden bg-wine"
+          >
+            {lightboxError ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <ImageOff size={32} className="text-ivory/30 mx-auto mb-2" />
+                  <p className="text-ivory/40 text-sm">{item.title}</p>
+                </div>
+              </div>
+            ) : (
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                onError={() => setLightboxError(true)}
+                className="object-contain"
+              />
+            )}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8 pt-20">
             <h2 className="text-ivory font-serif text-2xl md:text-3xl font-bold">
               {item.title}
@@ -188,13 +207,39 @@ function Lightbox({
 }
 
 export default function GalleryPage() {
+  const [items, setItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
 
+  useEffect(() => {
+    fetch("/api/gallery-images")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load gallery");
+        return res.json() as Promise<GalleryImageFile[]>;
+      })
+      .then((files) => {
+        setItems(
+          files.map((f, i) => ({
+            id: String(i + 1),
+            title: filenameToTitle(f.filename),
+            category: "Gallery",
+            image: f.src,
+          }))
+        );
+        setLoading(false);
+      })
+      .catch((err: Error) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
   const filtered =
     activeCategory === "All"
-      ? galleryItems
-      : galleryItems.filter((i) => i.category === activeCategory);
+      ? items
+      : items.filter((i) => i.category === activeCategory);
 
   const handlePrev = useCallback(() => {
     if (!selectedItem) return;
@@ -257,7 +302,7 @@ export default function GalleryPage() {
           className="bg-white rounded-2xl shadow-xl shadow-black/5 p-3 sm:p-4 flex flex-wrap items-center justify-center gap-2"
         >
           <Filter size={14} className="text-wine/30 mr-1" />
-          {categories.map((cat) => (
+          {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
@@ -277,18 +322,47 @@ export default function GalleryPage() {
       {/* Masonry Grid */}
       <section className="relative py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {filtered.map((item, index) => (
-              <GalleryCard
-                key={item.id}
-                item={item}
-                index={index}
-                onSelect={setSelectedItem}
-              />
-            ))}
-          </div>
+          {loading && (
+            <div className="flex items-center justify-center py-32">
+              <div className="text-center">
+                <Loader2 size={32} className="animate-spin text-gold mx-auto mb-4" />
+                <p className="text-wine/50 text-sm">Loading gallery...</p>
+              </div>
+            </div>
+          )}
 
-          {filtered.length === 0 && (
+          {error && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-20"
+            >
+              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                <AlertCircle size={24} className="text-red-500" />
+              </div>
+              <h3 className="font-serif text-xl font-bold text-wine mb-2">
+                Failed to load gallery
+              </h3>
+              <p className="text-wine/50 text-sm max-w-md mx-auto">
+                {error}. Please refresh the page or try again later.
+              </p>
+            </motion.div>
+          )}
+
+          {!loading && !error && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {filtered.map((item, index) => (
+                <GalleryCard
+                  key={item.id}
+                  item={item}
+                  index={index}
+                  onSelect={setSelectedItem}
+                />
+              ))}
+            </div>
+          )}
+
+          {!loading && !error && filtered.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -298,10 +372,10 @@ export default function GalleryPage() {
                 <Sparkles size={24} className="text-gold" />
               </div>
               <h3 className="font-serif text-xl font-bold text-wine mb-2">
-                No images in this category
+                No images found
               </h3>
               <p className="text-wine/50 text-sm">
-                Try selecting a different category to explore more.
+                No images are available in the gallery right now.
               </p>
             </motion.div>
           )}
